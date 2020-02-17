@@ -1,0 +1,43 @@
+void myFunc2 (int g){
+  int t = 4, y = g, i;
+  for (int t = y;; p; p = 0)  //аналог if)))
+	  myFunc2 (p-1);
+	  //p = p;
+  
+}
+
+int b = 6;
+char c;
+char m = 'y';
+
+void main (){
+
+  int j = 9;
+  char myChar = '0';
+  myFunc2 (3);
+  j = (myChar + '1');
+  j = j;
+  int u = j + b;
+  u = u + j;
+  u = j;
+  int  count = 0;
+  for (int u = 3; u; u = u - 1)
+  {
+	count = count + 1;
+    int n = u * u;
+  //  for (int i = u; 1; i = i - 1)
+   // {
+   //     int j = u * u;
+   // }
+  }
+  u = j;
+}
+
+long long int e = 5;
+
+void myFunc3 (int y)
+{
+  int t, i;
+}
+
+char c;
