@@ -11,10 +11,10 @@ Analizator::Analizator()
 void Analizator::S ()
 {
     int c;
-    scaner->toScan(lex);         //получаем список лексем
+    scaner->toScan(lex);         //РїРѕР»СѓС‡Р°РµРј СЃРїРёСЃРѕРє Р»РµРєСЃРµРј
 
     QString type;
-    for (int i = 0; i < scaner->Errors.count(); i++)         //выводим лексические ошибки
+    for (int i = 0; i < scaner->Errors.count(); i++)         //РІС‹РІРѕРґРёРј Р»РµРєСЃРёС‡РµСЃРєРёРµ РѕС€РёР±РєРё
     {
         std::cout<<'\n';
         std::cout<<"Lexical error in "<<scaner->Errors[i][0]<<":"<<scaner->Errors[i][1];
@@ -23,10 +23,10 @@ void Analizator::S ()
     T->Cur = T;
 
 
-    if(scaner->Errors.count() == 0)      //нет лексических ошибок
+    if(scaner->Errors.count() == 0)      //РЅРµС‚ Р»РµРєСЃРёС‡РµСЃРєРёС… РѕС€РёР±РѕРє
         while (cur < lex->count() - 1)
         {
-            if((*lex)[cur].type != Tvoid)   //не void - значит данные
+            if((*lex)[cur].type != Tvoid)   //РЅРµ void - Р·РЅР°С‡РёС‚ РґР°РЅРЅС‹Рµ
             {
                c = cur;
                if(!Data())
@@ -36,71 +36,71 @@ void Analizator::S ()
                     //ErrorText = ""
                     break;
                }
-               if ((*lex)[cur].type != Tdt)    //РµСЃР»Рё РЅРµ С‚.Р·.
+               if ((*lex)[cur].type != Tdt)    //Р ВµРЎРѓР В»Р С‘ Р Р…Р Вµ РЎвЂљ.Р В·.
                {
                    right = false;
-                   ErrorText = "Ожидался символ ;";
+                   ErrorText = "РћР¶РёРґР°Р»СЃСЏ СЃРёРјРІРѕР» ;";
                    break;
                }
                cur++;
             }
-            else        //void - значит описание функции
+            else        //void - Р·РЅР°С‡РёС‚ РѕРїРёСЃР°РЅРёРµ С„СѓРЅРєС†РёРё
             {
                 cur++;
                 if ((*lex)[cur].type == Tmain)      //main
                 {///
                     if (!T->semFToTable((*lex)[cur].image))
-                    {   ///дублирование main
-                        T->semError("Дублирование main", &(*lex)[cur]);
+                    {   ///РґСѓР±Р»РёСЂРѕРІР°РЅРёРµ main
+                        T->semError("Р”СѓР±Р»РёСЂРѕРІР°РЅРёРµ main", &(*lex)[cur]);
                     }
                  ///
                     cur++;
                     if ((*lex)[cur].type != Tls)
                     {
                         right = false;
-                        ErrorText = "Ожидался символ (";
+                        ErrorText = "РћР¶РёРґР°Р»СЃСЏ СЃРёРјРІРѕР» (";
                         break;
                     }
                     cur++;
                     if ((*lex)[cur].type != Trs)
                     {
                         right = false;
-                        ErrorText = "Ожидался символ )";
+                        ErrorText = "РћР¶РёРґР°Р»СЃСЏ СЃРёРјРІРѕР» )";
                         break;
                     }
                     cur++;
                 }
-                else    //Функция
+                else    //Р¤СѓРЅРєС†РёСЏ
                 {
-                    if ((*lex)[cur].type != Tid)          //РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ
+                    if ((*lex)[cur].type != Tid)          //Р С‘Р Т‘Р ВµР Р…РЎвЂљР С‘РЎвЂћР С‘Р С”Р В°РЎвЂљР С•РЎР‚
                     {
                         right = false;
-                        ErrorText = "Ожидался идентификатор";
+                        ErrorText = "РћР¶РёРґР°Р»СЃСЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ";
                         break;
                     }
                     else
             ///
                         if (!T->semFToTable((*lex)[cur].image))
-                        {   ///дублирование функции
-                            T->semError("Дублирование идентификатора", &(*lex)[cur]);
+                        {   ///РґСѓР±Р»РёСЂРѕРІР°РЅРёРµ С„СѓРЅРєС†РёРё
+                            T->semError("Р”СѓР±Р»РёСЂРѕРІР°РЅРёРµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР°", &(*lex)[cur]);
                         }
             ///
                     cur++;
                     if ((*lex)[cur].type != Tls)
                     {
                         right = false;
-                        ErrorText = "Ожидался символ )";
+                        ErrorText = "РћР¶РёРґР°Р»СЃСЏ СЃРёРјРІРѕР» )";
                         break;
                     }
                     cur++;
 
-                    if ((*lex)[cur].type != Trs)    //Не правая скобка
+                    if ((*lex)[cur].type != Trs)    //РќРµ РїСЂР°РІР°СЏ СЃРєРѕР±РєР°
                         do
                         {
                         ///
                             int t1;
                             int curPtr = cur;
-                            t1 = T->semType(&(*lex)[cur]);     //определим тип параметра
+                            t1 = T->semType(&(*lex)[cur]);     //РѕРїСЂРµРґРµР»РёРј С‚РёРї РїР°СЂР°РјРµС‚СЂР°
                         ///
                             if ((*lex)[cur].type != Tint && (*lex)[cur].type != Tchar)
                             {
@@ -123,20 +123,20 @@ void Analizator::S ()
                             if ((*lex)[cur].type != Tid)
                             {
                                 right = false;
-                                ErrorText = "Ожидался идентификатор";
+                                ErrorText = "РћР¶РёРґР°Р»СЃСЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ";
                                 break;
                             }
-                            else ///заносим в дерево + увеличим число параметров
+                            else ///Р·Р°РЅРѕСЃРёРј РІ РґРµСЂРµРІРѕ + СѓРІРµР»РёС‡РёРј С‡РёСЃР»Рѕ РїР°СЂР°РјРµС‚СЂРѕРІ
                             {
                                 Node *n = new Node ((*lex)[cur].image, t1);
-                                if (!T->Cur->FindOneLevel(n))    //на этом уровне нет
+                                if (!T->Cur->FindOneLevel(n))    //РЅР° СЌС‚РѕРј СѓСЂРѕРІРЅРµ РЅРµС‚
                                 {
-                                    T->Cur->semToTable(n);   //помещаем в таблицу (дерево)
-                                    T->semInc();        //увеличим число параметров
+                                    T->Cur->semToTable(n);   //РїРѕРјРµС‰Р°РµРј РІ С‚Р°Р±Р»РёС†Сѓ (РґРµСЂРµРІРѕ)
+                                    T->semInc();        //СѓРІРµР»РёС‡РёРј С‡РёСЃР»Рѕ РїР°СЂР°РјРµС‚СЂРѕРІ
                                 }
                                 else
                                 {
-                                    T->semError("Дублирование имени параметра", &(*lex)[cur]);
+                                    T->semError("Р”СѓР±Р»РёСЂРѕРІР°РЅРёРµ РёРјРµРЅРё РїР°СЂР°РјРµС‚СЂР°", &(*lex)[cur]);
                                 }
 
                             }
@@ -147,18 +147,18 @@ void Analizator::S ()
                     if ((*lex)[cur].type != Trs)
                     {
                         right = false;
-                        ErrorText = "Ожидался символ )";
+                        ErrorText = "РћР¶РёРґР°Р»СЃСЏ СЃРёРјРІРѕР» )";
                         break;
                     }
                     cur++;
                 }
-//далее должен идти сост. оператор
-                if (!SOper ())    //проверяем на сост. оператор
+//РґР°Р»РµРµ РґРѕР»Р¶РµРЅ РёРґС‚Рё СЃРѕСЃС‚. РѕРїРµСЂР°С‚РѕСЂ
+                if (!SOper ())    //РїСЂРѕРІРµСЂСЏРµРј РЅР° СЃРѕСЃС‚. РѕРїРµСЂР°С‚РѕСЂ
                 {
                     right = false;
                     break;
                 }
-                else    //был составной оператор. Восстановим уазатель
+                else    //Р±С‹Р» СЃРѕСЃС‚Р°РІРЅРѕР№ РѕРїРµСЂР°С‚РѕСЂ. Р’РѕСЃСЃС‚Р°РЅРѕРІРёРј СѓР°Р·Р°С‚РµР»СЊ
                 {
 ///
                     T->semRep();
@@ -173,10 +173,10 @@ void Analizator::S ()
 
     if (right == true)
         if ((*lex)[cur].type == Tend)
-            std::cout<<"\n Синтаксических ошибок не обнаружено\n";
+            std::cout<<"\n РЎРёРЅС‚Р°РєСЃРёС‡РµСЃРєРёС… РѕС€РёР±РѕРє РЅРµ РѕР±РЅР°СЂСѓР¶РµРЅРѕ\n";
         else;
     else
-        std::cout<<"\n Обнаружена ошибка в "<<(*lex)[cur].str<<":"<<(*lex)[cur].pos<<": "<<ErrorText<<"\n";
+        std::cout<<"\n РћР±РЅР°СЂСѓР¶РµРЅР° РѕС€РёР±РєР° РІ "<<(*lex)[cur].str<<":"<<(*lex)[cur].pos<<": "<<ErrorText<<"\n";
 
     std::cout.flush();
 
@@ -190,34 +190,34 @@ bool Analizator::Data ()
 {
     int t1;
     int curPtr = cur;
-    t1 = T->semType(&(*lex)[cur]);              //определим тип данных
+    t1 = T->semType(&(*lex)[cur]);              //РѕРїСЂРµРґРµР»РёРј С‚РёРї РґР°РЅРЅС‹С…
 
-    //Tree *ptr = T->Find((*lex)[cur].image);     //ищем идентификатор
-//    if (ptr == nullptr)     //ид не нашелся
-//        T->semError("Необъявленный идентификатор", &(*lex)[cur]);
+    //Tree *ptr = T->Find((*lex)[cur].image);     //РёС‰РµРј РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ
+//    if (ptr == nullptr)     //РёРґ РЅРµ РЅР°С€РµР»СЃСЏ
+//        T->semError("РќРµРѕР±СЉСЏРІР»РµРЅРЅС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ", &(*lex)[cur]);
 //    else
-//        tv = ptr->N->TypeObj;       //тип объекта
+//        tv = ptr->N->TypeObj;       //С‚РёРї РѕР±СЉРµРєС‚Р°
 
     if ((*lex)[cur].type != Tint && (*lex)[cur].type != Tchar)
     {
         if ((*lex)[cur].type != Tlong)
         {
             right = false;
-            ErrorText = "Ожидался тип";
+            ErrorText = "РћР¶РёРґР°Р»СЃСЏ С‚РёРї";
             return false;
         }
         cur++;
         if ((*lex)[cur].type != Tlong)
         {
             right = false;
-            ErrorText = "Ожидался long";
+            ErrorText = "РћР¶РёРґР°Р»СЃСЏ long";
             return false;
         }
         cur++;
         if ((*lex)[cur].type != Tint)
         {
             right = false;
-            ErrorText = "Ожидался int";
+            ErrorText = "РћР¶РёРґР°Р»СЃСЏ int";
             return false;
         }
 
@@ -229,19 +229,19 @@ bool Analizator::Data ()
         if ((*lex)[cur].type != Tid)
         {
             right = false;
-            ErrorText = "Ожидался идентификатор";
+            ErrorText = "РћР¶РёРґР°Р»СЃСЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ";
             return false;
         }
 ///
-        else        //помещаем идентификатор в таблицу
+        else        //РїРѕРјРµС‰Р°РµРј РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РІ С‚Р°Р±Р»РёС†Сѓ
         {
             if (t1 == TypeInt || t1 == TypeChar || t1 == TypeLong)
             {
-                T->Cur->semToTable(new Node ((*lex)[cur].image, t1));   //помещаем в таблицу (дерево)
+                T->Cur->semToTable(new Node ((*lex)[cur].image, t1));   //РїРѕРјРµС‰Р°РµРј РІ С‚Р°Р±Р»РёС†Сѓ (РґРµСЂРµРІРѕ)
             }
             else
             {
-                T->semError("Недопустимый тип", &(*lex)[cur]);
+                T->semError("РќРµРґРѕРїСѓСЃС‚РёРјС‹Р№ С‚РёРї", &(*lex)[cur]);
             }
         }
 ///
@@ -254,11 +254,11 @@ bool Analizator::Data ()
                 right = false;
                 return false;
             }
-            ///проверим типы при инициализации
+            ///РїСЂРѕРІРµСЂРёРј С‚РёРїС‹ РїСЂРё РёРЅРёС†РёР°Р»РёР·Р°С†РёРё
             else
             {
-                T->semTypeRes(t1, tv, &(*lex)[cur]);       //типы несовместимы
-                   // T->semError("Несоответствие типов", &(*lex)[cur]);
+                T->semTypeRes(t1, tv, &(*lex)[cur]);       //С‚РёРїС‹ РЅРµСЃРѕРІРјРµСЃС‚РёРјС‹
+                   // T->semError("РќРµСЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ С‚РёРїРѕРІ", &(*lex)[cur]);
             }
             ///
 
@@ -269,11 +269,11 @@ bool Analizator::Data ()
     return true;
 }
 
-bool Analizator::SOper ()     //составной оператор
+bool Analizator::SOper ()     //СЃРѕСЃС‚Р°РІРЅРѕР№ РѕРїРµСЂР°С‚РѕСЂ
 {
     if ((*lex)[cur].type != Tlf)
     {
-        ErrorText = "Ожидался символ {";
+        ErrorText = "РћР¶РёРґР°Р»СЃСЏ СЃРёРјРІРѕР» {";
         return false;
     }
     else
@@ -281,30 +281,30 @@ bool Analizator::SOper ()     //составной оператор
         ///
         T->Cur->addLeft(new Node ("", TypeEmpty));//!!!!!!!!!!!!!!!
         T->Cur = T->Cur->Left;
-        T->Cur = T->Cur->Right;    //уходим вправо //T->Cur->semToRight();
+        T->Cur = T->Cur->Right;    //СѓС…РѕРґРёРј РІРїСЂР°РІРѕ //T->Cur->semToRight();
         ///
     }
     cur++;
     while ((*lex)[cur].type != Trf)
     {
         //c = cur;
-        if ((*lex)[cur].type == Tint || (*lex)[cur].type == Tchar || (*lex)[cur].type == Tlong) //тип
+        if ((*lex)[cur].type == Tint || (*lex)[cur].type == Tchar || (*lex)[cur].type == Tlong) //С‚РёРї
         {
-            if (!Data())         //значит данные
+            if (!Data())         //Р·РЅР°С‡РёС‚ РґР°РЅРЅС‹Рµ
             {
                 //cur = c;
                 return false;
             }
-       //действительно данные
-            if ((*lex)[cur].type != Tdt)    //требуется т.з.
+       //РґРµР№СЃС‚РІРёС‚РµР»СЊРЅРѕ РґР°РЅРЅС‹Рµ
+            if ((*lex)[cur].type != Tdt)    //С‚СЂРµР±СѓРµС‚СЃСЏ С‚.Р·.
             {
-                ErrorText = "Ожидался символ ;";
+                ErrorText = "РћР¶РёРґР°Р»СЃСЏ СЃРёРјРІРѕР» ;";
                 return false;
             }
             cur++;
 
         }
-        else    //значит оператор
+        else    //Р·РЅР°С‡РёС‚ РѕРїРµСЂР°С‚РѕСЂ
         {
             if (!Oper())
                 return false;
@@ -312,7 +312,7 @@ bool Analizator::SOper ()     //составной оператор
     }
     if ((*lex)[cur].type != Trf)
     {
-        ErrorText = "Ожидался символ }";
+        ErrorText = "РћР¶РёРґР°Р»СЃСЏ СЃРёРјРІРѕР» }";
         return false;
     }
     cur++;
@@ -322,72 +322,72 @@ bool Analizator::SOper ()     //составной оператор
     return true;
 }
 
-bool Analizator::Oper ()     //оператор
+bool Analizator::Oper ()     //РѕРїРµСЂР°С‚РѕСЂ
 {
-    if ((*lex)[cur].type != Tdt)    //не пустой оператор
+    if ((*lex)[cur].type != Tdt)    //РЅРµ РїСѓСЃС‚РѕР№ РѕРїРµСЂР°С‚РѕСЂ
     {
-        if ((*lex)[cur].type == Tfor)   //есть for
-            if (!Cicle())         //не цикл
+        if ((*lex)[cur].type == Tfor)   //РµСЃС‚СЊ for
+            if (!Cicle())         //РЅРµ С†РёРєР»
                 return false;
             else;
         else
-            if ((*lex)[cur].type == Tlf)   //есть {
-                if (!SOper())       //Не сост. оператор
+            if ((*lex)[cur].type == Tlf)   //РµСЃС‚СЊ {
+                if (!SOper())       //РќРµ СЃРѕСЃС‚. РѕРїРµСЂР°С‚РѕСЂ
                     return false;
                 else;
             else
-                if ((*lex)[cur].type == Tid)   //идентификатор
+                if ((*lex)[cur].type == Tid)   //РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ
                 {
-                    if ((*lex)[cur+1].type == Teq)    //после идет =
-                        if (!Prisv()) //РЅРµ РїСЂРёСЃРІР°РёРІР°РЅРёРµ
+                    if ((*lex)[cur+1].type == Teq)    //РїРѕСЃР»Рµ РёРґРµС‚ =
+                        if (!Prisv()) //Р Р…Р Вµ Р С—РЎР‚Р С‘РЎРѓР Р†Р В°Р С‘Р Р†Р В°Р Р…Р С‘Р Вµ
                             return false;
                         else;
-                    else if ((*lex)[cur+1].type == Tls) //после идет (
-                            if (!Function()) //РЅРµ РІС‹СЂР°Р¶РµРЅРёРµ
+                    else if ((*lex)[cur+1].type == Tls) //РїРѕСЃР»Рµ РёРґРµС‚ (
+                            if (!Function()) //Р Р…Р Вµ Р Р†РЎвЂ№РЎР‚Р В°Р В¶Р ВµР Р…Р С‘Р Вµ
                                 return false;
                             else;
                     else
-                            if (!A1()) //выражение?
+                            if (!A1()) //РІС‹СЂР°Р¶РµРЅРёРµ?
                                 return false;
                    if ((*lex)[cur].type != Tdt)
                             {
-                                ErrorText = "Ожидался символ ;";
+                                ErrorText = "РћР¶РёРґР°Р»СЃСЏ СЃРёРјРІРѕР» ;";
                                 return false;
                             }
                     else cur++;
                 }
         else
                 {
-                    ErrorText = "Недопустимый оператор";
+                    ErrorText = "РќРµРґРѕРїСѓСЃС‚РёРјС‹Р№ РѕРїРµСЂР°С‚РѕСЂ";
                     return false;
                 }
 
     }
-    else cur++;     //пустой оператор
+    else cur++;     //РїСѓСЃС‚РѕР№ РѕРїРµСЂР°С‚РѕСЂ
     return true;
 }
 
-bool Analizator::Cicle ()     //С†РёРєР»
+bool Analizator::Cicle ()     //РЎвЂ Р С‘Р С”Р В»
 {
     if ((*lex)[cur].type != Tfor)
     {
-        ErrorText = "Ожидался for";
+        ErrorText = "РћР¶РёРґР°Р»СЃСЏ for";
         return false;
     }
     cur++;
     if ((*lex)[cur].type != Tls)
     {
-        ErrorText = "Ожидался символ (";
+        ErrorText = "РћР¶РёРґР°Р»СЃСЏ СЃРёРјРІРѕР» (";
         return false;
     }
     cur++;
-    if (!InitOfCicle())         //РЅРµ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ
+    if (!InitOfCicle())         //Р Р…Р Вµ Р С‘Р Р…Р С‘РЎвЂ Р С‘Р В°Р В»Р С‘Р В·Р В°РЎвЂ Р С‘РЎРЏ
     {
         return false;
     }
     if ((*lex)[cur].type != Tdt)
     {
-        if (!A1())         //РЅРµ A1
+        if (!A1())         //Р Р…Р Вµ A1
         {
             return false;
         }
@@ -395,22 +395,22 @@ bool Analizator::Cicle ()     //С†РёРєР»
     }
     if ((*lex)[cur].type != Tdt)
     {
-        ErrorText = "Ожидался символ ;";
+        ErrorText = "РћР¶РёРґР°Р»СЃСЏ СЃРёРјРІРѕР» ;";
         return false;
     }
     cur++;
 
-    if ((*lex)[cur].type != Trs)            //не закр. скобка - значит конец итерации
+    if ((*lex)[cur].type != Trs)            //РЅРµ Р·Р°РєСЂ. СЃРєРѕР±РєР° - Р·РЅР°С‡РёС‚ РєРѕРЅРµС† РёС‚РµСЂР°С†РёРё
     {
         if ((*lex)[cur].type == Tid)
             if ((*lex)[cur+1].type == Teq)
-                if (!Prisv())         //РЅРµ РІС‹СЂР°Р¶.
+                if (!Prisv())         //Р Р…Р Вµ Р Р†РЎвЂ№РЎР‚Р В°Р В¶.
                 {
-                    //ErrorText = "Ожидалось присваивание";
+                    //ErrorText = "РћР¶РёРґР°Р»РѕСЃСЊ РїСЂРёСЃРІР°РёРІР°РЅРёРµ";
                     return false;
                 }
                 else;
-            else if (!A1())         //РЅРµ РїСЂРёСЃРІР°РёРІР°РЅРёРµ
+            else if (!A1())         //Р Р…Р Вµ Р С—РЎР‚Р С‘РЎРѓР Р†Р В°Р С‘Р Р†Р В°Р Р…Р С‘Р Вµ
             {
                 return false;
             }
@@ -418,38 +418,38 @@ bool Analizator::Cicle ()     //С†РёРєР»
     }
     if ((*lex)[cur].type != Trs)
     {
-        ErrorText = "Ожидался символ )";
+        ErrorText = "РћР¶РёРґР°Р»СЃСЏ СЃРёРјРІРѕР» )";
         return false;
     }
     cur++;
-    if (!Oper())         //РЅРµ РѕРїРµСЂР°С‚РѕСЂ
+    if (!Oper())         //Р Р…Р Вµ Р С•Р С—Р ВµРЎР‚Р В°РЎвЂљР С•РЎР‚
     {
-        //cur = c;        //РІРѕР·РІСЂР°С‰Р°РµРј СѓРєР°Р·Р°С‚РµР»СЊ
+        //cur = c;        //Р Р†Р С•Р В·Р Р†РЎР‚Р В°РЎвЂ°Р В°Р ВµР С РЎС“Р С”Р В°Р В·Р В°РЎвЂљР ВµР В»РЎРЉ
         return false;
     }
     return true;
 }
 
-bool Analizator::InitOfCicle ()     //инициализация цикла
+bool Analizator::InitOfCicle ()     //РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ С†РёРєР»Р°
 {
-    if ((*lex)[cur].type != Tdt)    //не т.з - не пусто
+    if ((*lex)[cur].type != Tdt)    //РЅРµ С‚.Р· - РЅРµ РїСѓСЃС‚Рѕ
     {
-        //c = cur;    //Р·Р°РїРѕРјРёРЅР°РµРј
+        //c = cur;    //Р В·Р В°Р С—Р С•Р СР С‘Р Р…Р В°Р ВµР С
 
 
 
-        if ((*lex)[cur].type != Tid)        //идентиф. - значит данные
-            if (!Data())         //РЅРµ РґР°РЅРЅС‹Рµ
+        if ((*lex)[cur].type != Tid)        //РёРґРµРЅС‚РёС„. - Р·РЅР°С‡РёС‚ РґР°РЅРЅС‹Рµ
+            if (!Data())         //Р Р…Р Вµ Р Т‘Р В°Р Р…Р Р…РЎвЂ№Р Вµ
                 return false;
             else;
         else
-            if (!Prisv())         //РЅРµ РґР°РЅРЅС‹Рµ
+            if (!Prisv())         //Р Р…Р Вµ Р Т‘Р В°Р Р…Р Р…РЎвЂ№Р Вµ
             {
                 return false;
             }
         if ((*lex)[cur].type != Tdt)
         {
-            ErrorText = "Ожидался символ ;";
+            ErrorText = "РћР¶РёРґР°Р»СЃСЏ СЃРёРјРІРѕР» ;";
             return false;
         }
     }
@@ -457,22 +457,22 @@ bool Analizator::InitOfCicle ()     //инициализация цикла
     return true;
 }
 
-bool Analizator::Prisv ()     //присваивание
+bool Analizator::Prisv ()     //РїСЂРёСЃРІР°РёРІР°РЅРёРµ
 {
     if ((*lex)[cur].type != Tid)
     {
-        ErrorText = "Ожидался идентификатор";
+        ErrorText = "РћР¶РёРґР°Р»СЃСЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ";
         return false;
     }
 
 
 /////
-    Tree *ptr = T->Cur->Find((*lex)[cur].image);     //ищем идентификатор
+    Tree *ptr = T->Cur->Find((*lex)[cur].image);     //РёС‰РµРј РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ
     int t1;
-    if (ptr == nullptr)     //ид не нашелся
-        T->semError("Необъявленный идентификатор", &(*lex)[cur]);
+    if (ptr == nullptr)     //РёРґ РЅРµ РЅР°С€РµР»СЃСЏ
+        T->semError("РќРµРѕР±СЉСЏРІР»РµРЅРЅС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ", &(*lex)[cur]);
     else
-        t1 = ptr->N->TypeObj;       //тип объекта
+        t1 = ptr->N->TypeObj;       //С‚РёРї РѕР±СЉРµРєС‚Р°
 ////
 
 
@@ -480,20 +480,20 @@ bool Analizator::Prisv ()     //присваивание
     cur++;
     if ((*lex)[cur].type != Teq)
     {
-        ErrorText = "Ожидался символ =";
+        ErrorText = "РћР¶РёРґР°Р»СЃСЏ СЃРёРјРІРѕР» =";
         return false;
     }
     int curPtr = cur;
     cur++;
 
-    if (!A1())         //РЅРµ РІС‹СЂР°Р¶РµРЅРёРµ
+    if (!A1())         //Р Р…Р Вµ Р Р†РЎвЂ№РЎР‚Р В°Р В¶Р ВµР Р…Р С‘Р Вµ
     {
         return false;
     }
  ////
     if (ptr != nullptr)
-        T->semTypeRes(t1, tv, &(*lex)[curPtr]);       //типы несовместимы
-//            T->semError("Несоответствие типов", &(*lex)[curPtr]);
+        T->semTypeRes(t1, tv, &(*lex)[curPtr]);       //С‚РёРїС‹ РЅРµСЃРѕРІРјРµСЃС‚РёРјС‹
+//            T->semError("РќРµСЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ С‚РёРїРѕРІ", &(*lex)[curPtr]);
 ////
     return true;
 }
@@ -518,7 +518,7 @@ bool Analizator::A1 ()     //A1
         {
             ////
 T->semTypeResOnlyNum(t1, tv, &(*lex)[curPtr]);
-//                    T->semError("Несоответствие типов", &(*lex)[curPtr]);
+//                    T->semError("РќРµСЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ С‚РёРїРѕРІ", &(*lex)[curPtr]);
             ////
         }
     }
@@ -542,7 +542,7 @@ bool Analizator::A2 ()     //A1
         {
 //            ////
 T->semTypeResOnlyNum(t1, tv, &(*lex)[curPtr]);
-//                    T->semError("Несоответствие типов", &(*lex)[curPtr]);
+//                    T->semError("РќРµСЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ С‚РёРїРѕРІ", &(*lex)[curPtr]);
 //            ////
         }
     }
@@ -566,7 +566,7 @@ bool Analizator::A3 ()     //A3
         {
             ////
 T->semTypeResOnlyNum(t1, tv, &(*lex)[curPtr]);
-//                    T->semError("Несоответствие типов", &(*lex)[curPtr]);
+//                    T->semError("РќРµСЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ С‚РёРїРѕРІ", &(*lex)[curPtr]);
             ////
         }
     }
@@ -594,7 +594,7 @@ bool Analizator::A4 ()     //A1
         {
             ////
 T->semTypeRes(t1, tv, &(*lex)[curPtr]);
-//                    T->semError("Несоответствие типов", &(*lex)[curPtr]);
+//                    T->semError("РќРµСЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ С‚РёРїРѕРІ", &(*lex)[curPtr]);
             ////
         }
     }
@@ -620,8 +620,8 @@ bool Analizator::A5 ()     //A5
         else
         {
             ////
-T->semTypeResOnlyNum(t1, tv, &(*lex)[curPtr]);       //не число
-//                    T->semError("Несоответствие типов", &(*lex)[curPtr]);
+T->semTypeResOnlyNum(t1, tv, &(*lex)[curPtr]);       //РЅРµ С‡РёСЃР»Рѕ
+//                    T->semError("РќРµСЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ С‚РёРїРѕРІ", &(*lex)[curPtr]);
             ////
         }
     }
@@ -639,12 +639,12 @@ bool Analizator::A6 ()     //A1
     int curPtr = cur;
     if (!A7())
         return false;
-    else    //сейчас проверим тип. Он уже установлен в A7
+    else    //СЃРµР№С‡Р°СЃ РїСЂРѕРІРµСЂРёРј С‚РёРї. РћРЅ СѓР¶Рµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ РІ A7
     {
 ////
-        if (f)      //есть отрицание
-T->semTypeResUn(tv, &(*lex)[curPtr]);      //не число
-//                T->semError("Неподходящий тип", &(*lex)[curPtr]);
+        if (f)      //РµСЃС‚СЊ РѕС‚СЂРёС†Р°РЅРёРµ
+T->semTypeResUn(tv, &(*lex)[curPtr]);      //РЅРµ С‡РёСЃР»Рѕ
+//                T->semError("РќРµРїРѕРґС…РѕРґСЏС‰РёР№ С‚РёРї", &(*lex)[curPtr]);
 
 ////
     }
@@ -659,7 +659,7 @@ bool Analizator::A7 ()     //A7
     {
         if ((*lex)[cur].type != Tls)
         {
-            ErrorText = "Ожидалось выражение";
+            ErrorText = "РћР¶РёРґР°Р»РѕСЃСЊ РІС‹СЂР°Р¶РµРЅРёРµ";
             return false;
         }
         cur++;
@@ -667,7 +667,7 @@ bool Analizator::A7 ()     //A7
             return false;
         if ((*lex)[cur].type != Trs)
         {
-            ErrorText = "Ожидался символ )";
+            ErrorText = "РћР¶РёРґР°Р»СЃСЏ СЃРёРјРІРѕР» )";
             return false;
         }
         cur++;
@@ -676,17 +676,17 @@ bool Analizator::A7 ()     //A7
     {
         ////
 
-        if ((*lex)[cur].type != Tid)    //не id
-            tv = T->semType(&(*lex)[cur]);   //определим тип
+        if ((*lex)[cur].type != Tid)    //РЅРµ id
+            tv = T->semType(&(*lex)[cur]);   //РѕРїСЂРµРґРµР»РёРј С‚РёРї
         else        //id
         {
             tv = TypeUnKnown;
-            Tree *ptr = T->Cur->Find((*lex)[cur].image);     //ищем идентификатор
+            Tree *ptr = T->Cur->Find((*lex)[cur].image);     //РёС‰РµРј РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ
             //int t1;
-            if (ptr == nullptr)     //ид не нашелся
-                T->semError("Необъявленный идентификатор", &(*lex)[cur]);
+            if (ptr == nullptr)     //РёРґ РЅРµ РЅР°С€РµР»СЃСЏ
+                T->semError("РќРµРѕР±СЉСЏРІР»РµРЅРЅС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ", &(*lex)[cur]);
             else
-                tv = ptr->N->TypeObj;       //тип объекта
+                tv = ptr->N->TypeObj;       //С‚РёРї РѕР±СЉРµРєС‚Р°
         }
 ///
         cur++;
@@ -694,63 +694,63 @@ bool Analizator::A7 ()     //A7
     return true;
 }
 
-bool Analizator::Function ()     //РІС‹Р·РѕРІ С„СѓРЅРєС†РёРё
+bool Analizator::Function ()     //Р Р†РЎвЂ№Р В·Р С•Р Р† РЎвЂћРЎС“Р Р…Р С”РЎвЂ Р С‘Р С‘
 {
     Tree *ptr;
     int t1;
     if ((*lex)[cur].type != Tid)
     {
-        ErrorText = "Ожидался идентификатор";
+        ErrorText = "РћР¶РёРґР°Р»СЃСЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ";
         return false;
     }
     else
     {
     /////
-        ptr = T->Cur->Find(new Node ((*lex)[cur].image, TypeFunc));     //ищем функцию
+        ptr = T->Cur->Find(new Node ((*lex)[cur].image, TypeFunc));     //РёС‰РµРј С„СѓРЅРєС†РёСЋ
 
-        if (ptr == nullptr)     //ид не нашелся
-            T->semError("Необъявленная функция", &(*lex)[cur]);
+        if (ptr == nullptr)     //РёРґ РЅРµ РЅР°С€РµР»СЃСЏ
+            T->semError("РќРµРѕР±СЉСЏРІР»РµРЅРЅР°СЏ С„СѓРЅРєС†РёСЏ", &(*lex)[cur]);
 //        else
-//            t1 = ptr->N->TypeObj;       //тип объекта
+//            t1 = ptr->N->TypeObj;       //С‚РёРї РѕР±СЉРµРєС‚Р°
     ////
     }
     cur++;
     if ((*lex)[cur].type != Tls)
     {
-        ErrorText = "Ожидался символ (";
+        ErrorText = "РћР¶РёРґР°Р»СЃСЏ СЃРёРјРІРѕР» (";
         return false;
     }
     cur++;
 
-    if ((*lex)[cur].type != Trs)        //РїР°СЂР°РјРµС‚СЂС‹ Р±СѓРґСѓС‚
-        if (!A1())         //РЅРµ РІРµС‚РєР° СЃ РґР°РЅРЅС‹РјРё
+    if ((*lex)[cur].type != Trs)        //Р С—Р В°РЎР‚Р В°Р СР ВµРЎвЂљРЎР‚РЎвЂ№ Р В±РЎС“Р Т‘РЎС“РЎвЂљ
+        if (!A1())         //Р Р…Р Вµ Р Р†Р ВµРЎвЂљР С”Р В° РЎРѓ Р Т‘Р В°Р Р…Р Р…РЎвЂ№Р СР С‘
         {
-            ErrorText = "Ожидалось выражение";
+            ErrorText = "РћР¶РёРґР°Р»РѕСЃСЊ РІС‹СЂР°Р¶РµРЅРёРµ";
             return false;
         }
 
     while ((*lex)[cur].type != Trs)
     {
-        if ((*lex)[cur].type == Tzap) //Р·Р°РїСЏС‚Р°СЏ
+        if ((*lex)[cur].type == Tzap) //Р В·Р В°Р С—РЎРЏРЎвЂљР В°РЎРЏ
         {
             cur++;
         }
         else
         {
-            ErrorText = "Ожидался символ ,";
+            ErrorText = "РћР¶РёРґР°Р»СЃСЏ СЃРёРјРІРѕР» ,";
             return false;
         }
 
-        if (!A1())         //РЅРµ РІРµС‚РєР° СЃ РґР°РЅРЅС‹РјРё
+        if (!A1())         //Р Р…Р Вµ Р Р†Р ВµРЎвЂљР С”Р В° РЎРѓ Р Т‘Р В°Р Р…Р Р…РЎвЂ№Р СР С‘
         {
-            ErrorText = "Ожидалось выражение";
+            ErrorText = "РћР¶РёРґР°Р»РѕСЃСЊ РІС‹СЂР°Р¶РµРЅРёРµ";
             return false;
         }
 
     }
     if ((*lex)[cur].type != Trs)
     {
-        ErrorText = "Ожидался символ )";
+        ErrorText = "РћР¶РёРґР°Р»СЃСЏ СЃРёРјРІРѕР» )";
         return false;
     }
     cur++;

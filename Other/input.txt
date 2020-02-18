@@ -1,7 +1,11 @@
 void myFunc2 (int g){
   int t = 4, y = g, i;
-  for (int t = y;; p; p = 0)  //аналог if)))
+  for (int t = y; p; p = 0)  //аналог if)))
 	  myFunc2 (p-1);
+	  
+	for (t = y; p; p = 0)  //аналог if)))
+	  myFunc2 (p-1);
+	  
 	  //p = p;
   
 }
@@ -25,12 +29,23 @@ void main (){
   {
 	count = count + 1;
     int n = u * u;
-  //  for (int i = u; 1; i = i - 1)
-   // {
-   //     int j = u * u;
-   // }
+    for (int i = u; 1; i = i - 1)
+    {
+        int j = u * u;
+    }
   }
   u = j;
+  
+  //разные виды циклов
+   for (u = 5; u; u = u - 1);
+   for (;;);
+   for (0;0;0);
+   for (;0;)
+		u = 5;
+		
+   for (int 0 = 0;0;)
+		u = 5;
+  
 }
 
 long long int e = 5;

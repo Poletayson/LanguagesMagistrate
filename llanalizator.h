@@ -82,7 +82,7 @@ class LLAnalizator
 public:
     QStack <Lexem> Stack;
     QMultiMap <int, QMultiMap <int, QList<Rule>>> Table;
-    QMultiMap <int, std::string> NTerminalsNames;
+    QMultiMap <int, QString> NTerminalsNames;
     LLAnalizator();
     void toAnalize ();
 
@@ -94,7 +94,7 @@ public:
     QList <Lexem> *lex;
     bool right;
 //    Tree* T;
-    std::string ErrorText;
+    QString ErrorText;
 };
 
 #endif // LLANALIZATOR_H

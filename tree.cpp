@@ -3,7 +3,7 @@
 Tree* Tree::Cur;
 Tree* Tree::F;
 
-Tree::Tree()        //ïî óìîë÷àíèþ - ïóñòàÿ âåðøèíà
+Tree::Tree()        //Ð¿Ð¾ ÑƒÐ¼Ð¾Ð»Ñ‡Ð°Ð½Ð¸ÑŽ - Ð¿ÑƒÑÑ‚Ð°Ñ Ð²ÐµÑ€ÑˆÐ¸Ð½Ð°
 {
     N = new Node ("", TypeEmpty);
     Right = Left = Parent = nullptr;
@@ -28,32 +28,32 @@ Tree::Tree(Node *n)
 void Tree::addLeft (Node *n)
 {
     Tree *a = new Tree (this, nullptr, new Tree (), n);
-    a->Right->Parent = a;    //ðîäèòåëü - òåêóùàÿ
+    a->Right->Parent = a;    //Ñ€Ð¾Ð´Ð¸Ñ‚ÐµÐ»ÑŒ - Ñ‚ÐµÐºÑƒÑ‰Ð°Ñ
     Left = a;
     //Cur = Left;
 }
 void Tree::addRight (Node *n)
 {
     Tree *a = new Tree (this, nullptr, new Tree (), n);
-    a->Right->Parent = a;        //ðîäèòåëü - òåêóùàÿ
+    a->Right->Parent = a;        //Ñ€Ð¾Ð´Ð¸Ñ‚ÐµÐ»ÑŒ - Ñ‚ÐµÐºÑƒÑ‰Ð°Ñ
     Right = a;
     //Cur = Right;
 }
- Tree *Tree::Find (Tree *From, Node* n)     //èùåì âî âñåì äåðåâå ââåðõ
+ Tree *Tree::Find (Tree *From, Node* n)     //Ð¸Ñ‰ÐµÐ¼ Ð²Ð¾ Ð²ÑÐµÐ¼ Ð´ÐµÑ€ÐµÐ²Ðµ Ð²Ð²ÐµÑ€Ñ…
 {
     Tree *cur = From;
     while (cur != nullptr)
-         if (n->Id != cur->N->Id || n->TypeObj != cur->N->TypeObj)    //îáúåêò òàáëèöû íå ñîâïàäàåò ñ çàäàííûì
+         if (n->Id != cur->N->Id || n->TypeObj != cur->N->TypeObj)    //Ð¾Ð±ÑŠÐµÐºÑ‚ Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ñ‹ Ð½Ðµ ÑÐ¾Ð²Ð¿Ð°Ð´Ð°ÐµÑ‚ Ñ Ð·Ð°Ð´Ð°Ð½Ð½Ñ‹Ð¼
             cur = cur->Parent;
          else break;
     return cur;
 }
 
- Tree *Tree::Find (QString name)     //èùåì âî âñåì äåðåâå ââåðõ
+ Tree *Tree::Find (QString name)     //Ð¸Ñ‰ÐµÐ¼ Ð²Ð¾ Ð²ÑÐµÐ¼ Ð´ÐµÑ€ÐµÐ²Ðµ Ð²Ð²ÐµÑ€Ñ…
 {
     Tree *cur = this;
     while (cur != nullptr)
-         if (cur->N->Id != name)    //èìÿ îáúåêòà òàáëèöû íå ñîâïàäàåò ñ çàäàííûì
+         if (cur->N->Id != name)    //Ð¸Ð¼Ñ Ð¾Ð±ÑŠÐµÐºÑ‚Ð° Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ñ‹ Ð½Ðµ ÑÐ¾Ð²Ð¿Ð°Ð´Ð°ÐµÑ‚ Ñ Ð·Ð°Ð´Ð°Ð½Ð½Ñ‹Ð¼
             cur = cur->Parent;
          else break;
     return cur;
@@ -65,15 +65,15 @@ void Tree::addRight (Node *n)
 }
 
 
- Tree *Tree::FindOneLevel (Tree *From, Node* n)         //èùåì íà îäíîì óðîâíå
+ Tree *Tree::FindOneLevel (Tree *From, Node* n)         //Ð¸Ñ‰ÐµÐ¼ Ð½Ð° Ð¾Ð´Ð½Ð¾Ð¼ ÑƒÑ€Ð¾Ð²Ð½Ðµ
 {
     Tree *cur = From;
-    while (cur != nullptr)               //ïîêà íå äîøëè äî êîíöà èëè äî ïóñòîé âåðøèíû
+    while (cur != nullptr)               //Ð¿Ð¾ÐºÐ° Ð½Ðµ Ð´Ð¾ÑˆÐ»Ð¸ Ð´Ð¾ ÐºÐ¾Ð½Ñ†Ð° Ð¸Ð»Ð¸ Ð´Ð¾ Ð¿ÑƒÑÑ‚Ð¾Ð¹ Ð²ÐµÑ€ÑˆÐ¸Ð½Ñ‹
         if (cur->Parent != nullptr)
-            if (cur->Parent->Right == cur)      //ïðàâûé ïîòîìîê
+            if (cur->Parent->Right == cur)      //Ð¿Ñ€Ð°Ð²Ñ‹Ð¹ Ð¿Ð¾Ñ‚Ð¾Ð¼Ð¾Ðº
                 break;
             else
-                 if (n->Id != cur->N->Id || n->TypeObj != cur->N->TypeObj)    //îáúåêò òàáëèöû íå ñîâïàäàåò ñ çàäàííûì
+                 if (n->Id != cur->N->Id || n->TypeObj != cur->N->TypeObj)    //Ð¾Ð±ÑŠÐµÐºÑ‚ Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ñ‹ Ð½Ðµ ÑÐ¾Ð²Ð¿Ð°Ð´Ð°ÐµÑ‚ Ñ Ð·Ð°Ð´Ð°Ð½Ð½Ñ‹Ð¼
                     cur = cur->Parent;
                  else break;
         else cur = cur->Parent;
@@ -89,11 +89,11 @@ void Tree::addRight (Node *n)
 }
 
 
- Tree *Tree::FindRightLeft (Tree *From, Node* n)        //èùåì â ïðàâîì ðÿäó
+ Tree *Tree::FindRightLeft (Tree *From, Node* n)        //Ð¸Ñ‰ÐµÐ¼ Ð² Ð¿Ñ€Ð°Ð²Ð¾Ð¼ Ñ€ÑÐ´Ñƒ
 {
     Tree *cur = From->Right;
     while (cur != nullptr)
-         if (n->Id != cur->N->Id || n->TypeObj != cur->N->TypeObj)    //îáúåêò òàáëèöû íå ñîâïàäàåò ñ çàäàííûì
+         if (n->Id != cur->N->Id || n->TypeObj != cur->N->TypeObj)    //Ð¾Ð±ÑŠÐµÐºÑ‚ Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ñ‹ Ð½Ðµ ÑÐ¾Ð²Ð¿Ð°Ð´Ð°ÐµÑ‚ Ñ Ð·Ð°Ð´Ð°Ð½Ð½Ñ‹Ð¼
             cur = cur->Left;
          else break;
     return cur;
@@ -104,7 +104,7 @@ void Tree::addRight (Node *n)
     return FindRightLeft (this, n);
 }
 
- int Tree::semType(Lexem *lex)      //ñåìàíòè÷åñêèé òèï ëåêñåìû
+ int Tree::semType(Lexem *lex)      //ÑÐµÐ¼Ð°Ð½Ñ‚Ð¸Ñ‡ÐµÑÐºÐ¸Ð¹ Ñ‚Ð¸Ð¿ Ð»ÐµÐºÑÐµÐ¼Ñ‹
 {
      switch (lex->type)
 
@@ -150,55 +150,55 @@ void Tree::addRight (Node *n)
      }
 }
 
- bool Tree::semToTable (Node *n)  //ïðîâåðêà íà äóáëèðîâàíèå, çàíåñåíèå èäåíòèôèêàòîðà âìåñòå ñ ñåìàíòè÷åñêèì òèïîì â òàáëèöó
+ bool Tree::semToTable (Node *n)  //Ð¿Ñ€Ð¾Ð²ÐµÑ€ÐºÐ° Ð½Ð° Ð´ÑƒÐ±Ð»Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ, Ð·Ð°Ð½ÐµÑÐµÐ½Ð¸Ðµ Ð¸Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ð¾Ñ€Ð° Ð²Ð¼ÐµÑÑ‚Ðµ Ñ ÑÐµÐ¼Ð°Ð½Ñ‚Ð¸Ñ‡ÐµÑÐºÐ¸Ð¼ Ñ‚Ð¸Ð¿Ð¾Ð¼ Ð² Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ñƒ
  {
-    if (!Cur->FindOneLevel(n))  //óçëà åùå íåò
+    if (!Cur->FindOneLevel(n))  //ÑƒÐ·Ð»Ð° ÐµÑ‰Ðµ Ð½ÐµÑ‚
     {
         Cur->addLeft(n);
         Cur = Cur->Left;
         return true;
     }
-    else return false;      //äóáëèðîâàíèå
+    else return false;      //Ð´ÑƒÐ±Ð»Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ
 
  }
 
-bool Tree::semFToTable (QString name)       //çàíåñåíèå èìåíè ôóíêöèè  â òàáëèöó, ñîçäàíèå ïóñòîé ïðàâîé âåðøèíû. Óñòàíàâëèâàåò óêàçàòåëü íà ïðàâóþ ñîçäàííóþ
+bool Tree::semFToTable (QString name)       //Ð·Ð°Ð½ÐµÑÐµÐ½Ð¸Ðµ Ð¸Ð¼ÐµÐ½Ð¸ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸  Ð² Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ñƒ, ÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ðµ Ð¿ÑƒÑÑ‚Ð¾Ð¹ Ð¿Ñ€Ð°Ð²Ð¾Ð¹ Ð²ÐµÑ€ÑˆÐ¸Ð½Ñ‹. Ð£ÑÑ‚Ð°Ð½Ð°Ð²Ð»Ð¸Ð²Ð°ÐµÑ‚ ÑƒÐºÐ°Ð·Ð°Ñ‚ÐµÐ»ÑŒ Ð½Ð° Ð¿Ñ€Ð°Ð²ÑƒÑŽ ÑÐ¾Ð·Ð´Ð°Ð½Ð½ÑƒÑŽ
 {
-    Node *ptr = new Node (name, TypeFunc);  //ñîçäàåì
-    if (!Cur->Find(name))  //óçëà åùå íåò
+    Node *ptr = new Node (name, TypeFunc);  //ÑÐ¾Ð·Ð´Ð°ÐµÐ¼
+    if (!Cur->Find(name))  //ÑƒÐ·Ð»Ð° ÐµÑ‰Ðµ Ð½ÐµÑ‚
     {
         Cur->addLeft(ptr);
         Cur = Cur->Left;
-        F = Cur;                //óêàçàòåëü íà ôóíêöèþ
-        Cur = Cur->Right;       //ïåðåõîäèì íà ïóñòóþ ïðàâóþ
+        F = Cur;                //ÑƒÐºÐ°Ð·Ð°Ñ‚ÐµÐ»ÑŒ Ð½Ð° Ñ„ÑƒÐ½ÐºÑ†Ð¸ÑŽ
+        Cur = Cur->Right;       //Ð¿ÐµÑ€ÐµÑ…Ð¾Ð´Ð¸Ð¼ Ð½Ð° Ð¿ÑƒÑÑ‚ÑƒÑŽ Ð¿Ñ€Ð°Ð²ÑƒÑŽ
         return true;
     }
-    else return false;      //äóáëèðîâàíèå
+    else return false;      //Ð´ÑƒÐ±Ð»Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ
 }
 
-void Tree::semRep ()     ///âîññòàíîâëåíèå óêàçàòåëÿ íà âåðøèíó. Ïîäíèìàåìñÿ ïî ëåâûì ñâÿçÿì è ïîäí. íà ñëåä óðîâåíü
+void Tree::semRep ()     ///Ð²Ð¾ÑÑÑ‚Ð°Ð½Ð¾Ð²Ð»ÐµÐ½Ð¸Ðµ ÑƒÐºÐ°Ð·Ð°Ñ‚ÐµÐ»Ñ Ð½Ð° Ð²ÐµÑ€ÑˆÐ¸Ð½Ñƒ. ÐŸÐ¾Ð´Ð½Ð¸Ð¼Ð°ÐµÐ¼ÑÑ Ð¿Ð¾ Ð»ÐµÐ²Ñ‹Ð¼ ÑÐ²ÑÐ·ÑÐ¼ Ð¸ Ð¿Ð¾Ð´Ð½. Ð½Ð° ÑÐ»ÐµÐ´ ÑƒÑ€Ð¾Ð²ÐµÐ½ÑŒ
 {
     Tree *c = Cur;
-    while (Cur != nullptr)  //ïîêà íå äîøëè äî êîíöà öåïî÷êè
+    while (Cur != nullptr)  //Ð¿Ð¾ÐºÐ° Ð½Ðµ Ð´Ð¾ÑˆÐ»Ð¸ Ð´Ð¾ ÐºÐ¾Ð½Ñ†Ð° Ñ†ÐµÐ¿Ð¾Ñ‡ÐºÐ¸
         if (Cur->Parent != nullptr)
-             if (Cur->Parent->Right != Cur)    //íå ïðàâûé ïîòîìîê
+             if (Cur->Parent->Right != Cur)    //Ð½Ðµ Ð¿Ñ€Ð°Ð²Ñ‹Ð¹ Ð¿Ð¾Ñ‚Ð¾Ð¼Ð¾Ðº
                 Cur = Cur->Parent;
              else break;
         else Cur = Cur->Parent;
-    if (Cur != nullptr)             //óêàçàòåëü íà ðîäèòåëÿ
+    if (Cur != nullptr)             //ÑƒÐºÐ°Ð·Ð°Ñ‚ÐµÐ»ÑŒ Ð½Ð° Ñ€Ð¾Ð´Ð¸Ñ‚ÐµÐ»Ñ
             Cur = Cur->Parent;
 }
-void Tree::semToRight()        //äîáàâèòü âåðøèíó ñïðàâà
+void Tree::semToRight()        //Ð´Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ð²ÐµÑ€ÑˆÐ¸Ð½Ñƒ ÑÐ¿Ñ€Ð°Ð²Ð°
 {
-    Cur->addRight(new Node ("", TypeEmpty));     //ïóñòàÿ âåðøèíà
+    Cur->addRight(new Node ("", TypeEmpty));     //Ð¿ÑƒÑÑ‚Ð°Ñ Ð²ÐµÑ€ÑˆÐ¸Ð½Ð°
     Cur = Cur->Right;
 }
 
-void Tree::semInc (Tree *func)       //óâåëè÷èòü ÷èñëî ïàðàìåòðîâ ôóíêöèè
+void Tree::semInc (Tree *func)       //ÑƒÐ²ÐµÐ»Ð¸Ñ‡Ð¸Ñ‚ÑŒ Ñ‡Ð¸ÑÐ»Ð¾ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ð¾Ð² Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸
 {
     func->N->ParamCount++;
 }
-void Tree::semInc ()       //óâåëè÷èòü ÷èñëî ïàðàìåòðîâ ôóíêöèè
+void Tree::semInc ()       //ÑƒÐ²ÐµÐ»Ð¸Ñ‡Ð¸Ñ‚ÑŒ Ñ‡Ð¸ÑÐ»Ð¾ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ð¾Ð² Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸
 {
     F->N->ParamCount++;
 }
@@ -214,10 +214,10 @@ void Tree::semError(std::string err, Lexem* L)
 
     cout.setCodec(QTextCodec::codecForName("cp866"));
 
-    std::cout<<"\n Ñåìàíòè÷åñêàÿ îøèáêà â "<<L->str<<":"<<L->pos<<": "<<err;
+    std::cout<<"\n Ð¡ÐµÐ¼Ð°Ð½Ñ‚Ð¸Ñ‡ÐµÑÐºÐ°Ñ Ð¾ÑˆÐ¸Ð±ÐºÐ° Ð² "<<L->str<<":"<<L->pos<<": "<<err;
 }
 
-int Tree::semTypeRes (int o1, int o2, Lexem* l)      //ïðîâåðêà ðåçóëüòàòà îïåðàöèè
+int Tree::semTypeRes (int o1, int o2, Lexem* l)      //Ð¿Ñ€Ð¾Ð²ÐµÑ€ÐºÐ° Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð° Ð¾Ð¿ÐµÑ€Ð°Ñ†Ð¸Ð¸
 {
     if (o1 == TypeInt && o2 == TypeInt)
         return TypeInt;
@@ -232,10 +232,10 @@ int Tree::semTypeRes (int o1, int o2, Lexem* l)      //ïðîâåðêà ðåçóëüòàòà îïåðà
     if (o1 == TypeInt && o2 == TypeChar)
         return TypeInt;
     if (o1 != TypeUnKnown && o2 != TypeUnKnown)
-        semError("Íåñîîòâåòñòâèå òèïîâ", l);
+        semError("ÐÐµÑÐ¾Ð¾Ñ‚Ð²ÐµÑ‚ÑÑ‚Ð²Ð¸Ðµ Ñ‚Ð¸Ð¿Ð¾Ð²", l);
     return TypeUnKnown;
 }
-int Tree::semTypeResOnlyNum (int o1, int o2, Lexem* l)      //ïðîâåðêà ðåçóëüòàòà îïåðàöèè
+int Tree::semTypeResOnlyNum (int o1, int o2, Lexem* l)      //Ð¿Ñ€Ð¾Ð²ÐµÑ€ÐºÐ° Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð° Ð¾Ð¿ÐµÑ€Ð°Ñ†Ð¸Ð¸
 {
     if (o1 == TypeInt && o2 == TypeInt)
         return TypeInt;
@@ -244,15 +244,15 @@ int Tree::semTypeResOnlyNum (int o1, int o2, Lexem* l)      //ïðîâåðêà ðåçóëüòàò
     if (o1 == TypeLong && o2 == TypeInt)
         return TypeLong;
     if (o1 != TypeUnKnown && o2 != TypeUnKnown)
-        semError("Íåñîîòâåòñòâèå òèïîâ", l);
+        semError("ÐÐµÑÐ¾Ð¾Ñ‚Ð²ÐµÑ‚ÑÑ‚Ð²Ð¸Ðµ Ñ‚Ð¸Ð¿Ð¾Ð²", l);
     return TypeUnKnown;
 }
 
-int Tree::semTypeResUn (int o1, Lexem* l)      //ïðîâåðêà ðåçóëüòàòà óíàðíîé îïåðàöèè
+int Tree::semTypeResUn (int o1, Lexem* l)      //Ð¿Ñ€Ð¾Ð²ÐµÑ€ÐºÐ° Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð° ÑƒÐ½Ð°Ñ€Ð½Ð¾Ð¹ Ð¾Ð¿ÐµÑ€Ð°Ñ†Ð¸Ð¸
 {
     if (o1 == TypeInt || o1 == TypeLong)
         return o1;
     if (o1 != TypeUnKnown)
-        semError("Íåñîîòâåòñòâèå òèïîâ", l);
+        semError("ÐÐµÑÐ¾Ð¾Ñ‚Ð²ÐµÑ‚ÑÑ‚Ð²Ð¸Ðµ Ñ‚Ð¸Ð¿Ð¾Ð²", l);
     return TypeUnKnown;
 }
