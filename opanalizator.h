@@ -63,9 +63,12 @@ class OPAnalizator
     QList <QList<Rule>> grammar;    //грамматика
     QMap<int, QMap<int, QList<int>>> matrixPrecedence;
 
+    bool forFlag;   //флажок того, что идет описание цикла
+    int bacesCount; //
+
 private:
     QList<int> getPrecedence (int x1, int x2);  //получить список с отношениями для двух лексем
-    int getPrecedence ();   //получить список с отношениями для двух верхних лексем из магазина
+    int getPrecedence ();   //получить отношениt для двух верхуши магазина и символа цепочки
     int getReduceLength (); //длина редуцируемой цепочки
 
 public:
