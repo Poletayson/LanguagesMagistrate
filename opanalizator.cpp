@@ -75,19 +75,6 @@ int OPAnalizator::getPrecedence()
                 bool isS = false;  //
                 if (Stack.last().type == NS)
                     isS = true;
-//                int c = Stack.length() - 2;
-//                //ищем нетерминал. если найдем
-//                while (c >= 0){
-//                    if (Stack[c].type == Tdt){
-//                        isS = true;
-//                        break;
-//                    }
-//                    //левая скобка означает, что не нашли
-//                    if (Stack[c].type == Tls){
-//                        break;
-//                    }
-//                    c--;
-//                }
                 //сворачиваем, если между ) и { еще есть S
                 if (isS)
                     return MORE;
@@ -105,6 +92,9 @@ int OPAnalizator::getPrecedence()
                 int c = Stack.length() - 2;
                 //ищем открыв. скобку
                 while (c >= 0){
+                    if (Stack[c].type == Trs){
+                        break;
+                    }
                     if (Stack[c].type == Tls){
                         isLs = true;
                         break;
@@ -124,10 +114,13 @@ int OPAnalizator::getPrecedence()
             //с ;. <= если в описании цикла
             if ((*lex)[cur].type == Tdt){
                 bool isLs = false;  //есть ли в магазине левая скобка
-                int c = Stack.length() - 2;
-                //ищем открыв. скобку
+                int c = Stack.length() - 1;
+                //ищем } или S
                 while (c >= 0){
-                    if (Stack[c].type == Tls){
+                    if (Stack[c].type == Trs){
+                        break;
+                    }
+                    if (Stack[c].type == Trf || Stack[c].type == NS){
                         isLs = true;
                         break;
                     }
@@ -135,14 +128,36 @@ int OPAnalizator::getPrecedence()
                 }
                 //если левая скобка, значит это описание цикла, нужно продолжать
                 if (isLs)
-                    return LESS_EQUAL;
-                else
                     return MORE;
+                else
+                    return LESS_EQUAL;
             }
         }
 
-        ///TODO!!!
-        ///обработка коллизий
+        //коллизии с int char
+        if (Stack[Stack.length() - 1 - x1].type == Tint || Stack[Stack.length() - 1 - x1].type == Tchar){
+            //с ;. <= если в описании цикла
+            if ((*lex)[cur].type == Tdt){
+                bool isLs = false;  //есть ли в магазине левая скобка и for - то свернем
+                int c = Stack.length() - 2;
+                //ищем открыв. скобку
+                while (c >= 0){
+                    if (Stack[c].type == Trs){
+                        break;
+                    }
+                    if (Stack[c].type == Tls && Stack[c - 1].type == Tfor){
+                        isLs = true;
+                        break;
+                    }
+                    c--;
+                }
+                //если левая скобка, значит это описание цикла, нужно сворачивать
+                if (isLs)
+                    return  MORE;
+                else
+                    return LESS_EQUAL;
+            }
+        }
         return NOT_PRECEDENCE;
     }
 }
@@ -157,12 +172,17 @@ int OPAnalizator::getReduceLength()
     for (int i = 0; i < Stack.length() - 2; i++){
         if (Stack[Stack.length() - 1 - i].type == Trs)
             break;
-        //ищем id (
-        if (Stack[Stack.length() - 1 - i].type == Tls && Stack[Stack.length() - 2 - i].type == Tid && Stack[Stack.length() - 3 - i].type == Tvoid){
+        //ищем id ( или for (
+        if (Stack[Stack.length() - 1 - i].type == Tls && (Stack[Stack.length() - 2 - i].type == Tid || Stack[Stack.length() - 2 - i].type == Tfor)){
             isSP = true;    //список параметров
-            qDebug() << "\nisSP\n";
+            //qDebug() << "\nisSP\n";
             break;
         }
+    }
+    bool isPrisv = false;  //присваивание ли перед нами
+    if (Stack.length() > 3){
+        if (Stack[Stack.length() - 1].type == NS && Stack[Stack.length() - 2].type == Teq && Stack[Stack.length() - 3].type == Tid && Stack[Stack.length() - 4].type == NS)
+            isPrisv = true;
     }
 
     while (n > 0) {
@@ -179,17 +199,28 @@ int OPAnalizator::getReduceLength()
                 }
             }
 
-            //если не список параметров - правила придется откинуть
+            //если не список параметров/описание цикла - правила придется откинуть
             ///
             if (!isSP){
                 if (n >= 2)
-                    if ((*rule.rule)[(*rule.rule).length() - 1]->type == Tid && ((*rule.rule)[(*rule.rule).length() - 2]->type == Tint || (*rule.rule)[(*rule.rule).length() - 2]->type == Tchar)){
+                    if (((*rule.rule)[(*rule.rule).length() - 1]->type == Tid || (*rule.rule)[(*rule.rule).length() - 1]->type == NS) && ((*rule.rule)[(*rule.rule).length() - 2]->type == Tint || (*rule.rule)[(*rule.rule).length() - 2]->type == Tchar )){
                         flag = false;
                         //qDebug() << "\nOUT\n";
                     }
 
+
+
                 if (n >= 4)
-                    if ((*rule.rule)[(*rule.rule).length() - 1]->type == Tid && (*rule.rule)[(*rule.rule).length() - 2]->type == Tint || (*rule.rule)[(*rule.rule).length() - 3]->type == Tlong){
+                    if (((*rule.rule)[(*rule.rule).length() - 1]->type == Tid || (*rule.rule)[(*rule.rule).length() - 1]->type == NS) && (*rule.rule)[(*rule.rule).length() - 2]->type == Tint && (*rule.rule)[(*rule.rule).length() - 3]->type == Tlong){
+                        flag = false;
+                        //qDebug() << "\nOUT\n";
+                    }
+            }
+
+            if (isPrisv){
+                //чтобы не пропустить присваивание - оно захватывает ;
+                if (n >= 3)
+                    if ((*rule.rule)[(*rule.rule).length() - 1]->type == NS && (*rule.rule)[(*rule.rule).length() - 2]->type == Teq){
                         flag = false;
                         //qDebug() << "\nOUT\n";
                     }
@@ -213,35 +244,6 @@ int OPAnalizator::getReduceLength()
     return n;
 }
 
-////длина редуцируемой цепочки
-//int OPAnalizator::getReduceLength()
-//{
-//    int n = 0;
-//    int counter;
-//    do{
-//        n++;
-//        counter = 0;
-//        QList <Rule> rules = grammar[n];    //список правил заданной длины
-//        foreach(Rule rule, rules){
-//            bool flag = true;
-//            //проходим
-//            for (int i = 0; i < n; i++){
-//                if (Stack[Stack.length() - 1 - i].type != (*rule.rule)[(*rule.rule).length() - 1 - i]->type){
-//                    flag = false;
-//                    break;
-//                }
-//            }
-//            if (flag){
-//                counter++;
-//                break;
-//            }
-//        }
-
-//    }while (counter > 0 && Stack.length() >= n);
-//    ///TODO
-//    ///обработать коллизии с грамматикой
-//    return n - 1;
-//}
 
 OPAnalizator::OPAnalizator()
 {
@@ -337,8 +339,6 @@ void OPAnalizator::toAnalize()
         if (lex->length() > 1){
             cur = 0;        //теущая лесема
             isError = false;
-//            Stack.append((*lex)[cur]); //кладем первую лексему цепочки
-//            cur++;
             precedenceLast = getPrecedence();
             //отношение не найдено
             if (precedenceLast == NOT_PRECEDENCE){
@@ -422,6 +422,7 @@ void OPAnalizator::toAnalize()
                     }
                 }
             }
+            //досворачиваем то, что осталось в магазине
             if (StackPrecedence.last() == MORE){
                 //в верхуше магазина отношение > - пора редуцировать цепочку
 
@@ -468,7 +469,7 @@ void OPAnalizator::toAnalize()
 //                    }
 //                    outStream<< "\n++++++";
 
-                    reduceLength = getReduceLength();
+//                    reduceLength = getReduceLength();
                 }
             }
 
@@ -494,20 +495,17 @@ errorLabel:
     outStream.flush();
 
     if (!isError)
-        //if ((*lex)[cur].type == Tend)
         outStream<<QString("\n Синтаксических ошибок не обнаружено\n");
-        //else;
     else
     {
         outStream<< ErrorText << "\n";
-        foreach (Lexem l, Stack) {
-            outStream<< lexImages.value(l.type) << " ";
-        }
+//        foreach (Lexem l, Stack) {
+//            outStream<< lexImages.value(l.type) << " ";
+//        }
 
     }
 
    outStream.flush();
-
 
     return;
 }
@@ -525,10 +523,6 @@ void OPAnalizator::getGrammar()
     for (int i = 0; i < 20; i++){
         grammar.append(QList<Rule> ());
     }
-
-//    qDebug() << rules.length() <<"\n";
-
-
 
     QRegExp rxRem("*->");
     QRegExp rxSpaces("[ \t|]");

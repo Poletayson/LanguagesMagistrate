@@ -54,17 +54,12 @@ class OPAnalizator
 {
     QList <Lexem> Stack;   //магазин
     QList <int> StackPrecedence; //магазин с отношениями предшествования
-    QMultiMap <int, QMultiMap <int, QList<Rule>>> Table;
-    //QMultiMap <int, QString> NTerminalsNames;
+
+    QList <QList<Rule>> grammar;    //грамматика
+    QMap<int, QMap<int, QList<int>>> matrixPrecedence;  //матрица предшествования
 
     QMap <int, QString> lexImages;
 
-
-    QList <QList<Rule>> grammar;    //грамматика
-    QMap<int, QMap<int, QList<int>>> matrixPrecedence;
-
-    bool forFlag;   //флажок того, что идет описание цикла
-    int bacesCount; //
 
 private:
     QList<int> getPrecedence (int x1, int x2);  //получить список с отношениями для двух лексем
