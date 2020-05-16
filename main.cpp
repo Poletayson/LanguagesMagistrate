@@ -7,8 +7,8 @@
 #include <QTextStream>
 #include <stdio.h>
 #include <locale.h>
-//#include <llanalizator.h>
-#include <opanalizator.h>
+#include <llanalizator.h>
+//#include <opanalizator.h>
 #include "stdio.h"
 //using namespace std;
 
@@ -19,11 +19,11 @@ int main(int argc, char *argv[])
 //    Analizator A;
 //    A.S();
 
-//    LLAnalizator A;
-//    A.toAnalize();
-
-    OPAnalizator A;
+    LLAnalizator A;
     A.toAnalize();
+
+//    OPAnalizator A;
+//    A.toAnalize();
 
     system("pause");
     return 0;

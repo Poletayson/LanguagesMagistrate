@@ -31,7 +31,8 @@ SOURCES += \
     node.cpp \
     tree.cpp \
     llanalizator.cpp \
-    rule.cpp
+    rule.cpp \
+    treell.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -46,4 +47,5 @@ HEADERS += \
     node.h \
     tree.h \
     llanalizator.h \
-    rule.h
+    rule.h \
+    treell.h

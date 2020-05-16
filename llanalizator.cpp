@@ -1,4 +1,5 @@
 #include "llanalizator.h"
+#include "treell.h"
 
 LLAnalizator::LLAnalizator()
 {
@@ -97,7 +98,20 @@ LLAnalizator::LLAnalizator()
     Rules.append(*new Rule (&Cell));    //добавляем правило
     Sting.insert(Tvoid, Rules);      //добавляем список правил в ячейку строки
 
+    Cell.append(new Lexem (NS, true));
+    Cell.append(new Lexem (Trf, false));
+    Cell.append(new Lexem (NBlock, true));
+    Cell.append(new Lexem (Tlf, false));
+    Cell.append(new Lexem (Trs, false));
+    Cell.append(new Lexem (NSpPar, true));
+    Cell.append(new Lexem (Tls, false));
+    Cell.append(new Lexem (Tmain, false));
+    Cell.append(new Lexem (Tvoid, false));
+    Rules.append(*new Rule (&Cell));    //добавляем правило
+    Sting.insert(Tvoid, Rules);      //добавляем список правил в ячейку строки
+
     Cell.clear();   //int
+    Cell.append(new Lexem (NS, true));
     Cell.append(new Lexem (Tdt, false));
     Cell.append(new Lexem (NSpIdent, true));
     Cell.append(new Lexem (Tint, false));
@@ -106,6 +120,7 @@ LLAnalizator::LLAnalizator()
     Sting.insert(Tint, Rules);      //добавляем список правил в ячейку строки
 
     Cell.clear();   //char
+    Cell.append(new Lexem (NS, true));
     Cell.append(new Lexem (Tdt, false));
     Cell.append(new Lexem (NSpIdent, true));
     Cell.append(new Lexem (Tchar, false));
@@ -114,11 +129,12 @@ LLAnalizator::LLAnalizator()
     Sting.insert(Tchar, Rules);      //добавляем список правил в ячейку строки
 
     Cell.clear();   //long
+    Cell.append(new Lexem (NS, true));
     Cell.append(new Lexem (Tdt, false));
     Cell.append(new Lexem (NSpIdent, true));
-    Cell.append(new Lexem (Tlong, false));
-    Cell.append(new Lexem (Tlong, false));
     Cell.append(new Lexem (Tint, false));
+    Cell.append(new Lexem (Tlong, false));
+    Cell.append(new Lexem (Tlong, false));
     Rules.clear();
     Rules.append(*new Rule (&Cell));
     Sting.insert(Tlong, Rules);      //добавляем список правил в ячейку строки
@@ -189,6 +205,12 @@ LLAnalizator::LLAnalizator()
     Rules.clear();
     Rules.append(*new Rule (&Cell));
     Sting.insert(Tlong, Rules);      //добавляем список правил в ячейку строки
+
+    Cell.clear();   //char
+    Cell.append(new Lexem (NB, true));
+    Rules.clear();
+    Rules.append(*new Rule (&Cell));
+    Sting.insert(Trs, Rules);      //добавляем список правил в ячейку строки
 
     Table.insert(NSpPar, Sting);
 
@@ -416,6 +438,7 @@ LLAnalizator::LLAnalizator()
         Sting.insert(Tid, Rules);      //добавляем список правил в ячейку строки
 
         Cell.clear();   //;
+        Cell.append(new Lexem (Tdt, false));
         Rules.clear();
         Rules.append(*new Rule (&Cell));
         Sting.insert(Tdt, Rules);      //добавляем список правил в ячейку строки
@@ -431,12 +454,10 @@ LLAnalizator::LLAnalizator()
         Sting.insert(Trs, Rules);      //добавляем список правил в ячейку строки
 
         Cell.clear();   //;
-//        Cell.append(new Lexem (Tdt, false));
         Cell.append(new Lexem (NPrisv, true));
         Rules.clear();
         Rules.append(*new Rule (&Cell));
         Cell.clear();   //;
-//        Cell.append(new Lexem (Tdt, false));
         Cell.append(new Lexem (NA1, true));
         Rules.append(*new Rule (&Cell));
         Sting.insert(Tid, Rules);      //добавляем список правил в ячейку строки
@@ -834,7 +855,6 @@ void LLAnalizator::toAnalize ()
     #ifndef QT_NO_TEXTCODEC
         outStream.setCodec("csIBM866");
     #endif
-        ;
 
     for (int i = 0; i < scaner->Errors.count(); i++)         //выводим лексические ошибки
     {
@@ -857,7 +877,7 @@ void LLAnalizator::toAnalize ()
         QList <Lexem*> rule;
         Lex = new Lexem (NS, true);
         Stack.append(*Lex);             //аксиому в стек
-        while (Stack.size() > 0 && !isError)        //стек непустой
+        while (cur < lex->count() - 1 && !isError)        //стек непустой
         {
             Lex = new Lexem (Stack.pop ());     //получаем лексему из стека
             if (Lex->isNT == true)              //в магазине - нетерминал
@@ -877,18 +897,38 @@ void LLAnalizator::toAnalize ()
                     }
                     else    //рассмотрим коллизию
                     {
-                        if ((*lex)[cur+1].type == Teq)    //присваивание
-                        {
-                            rule = *Rules[0].rule;
+                        switch (Lex->type) {
+                            case NS:{
+                                if ((*lex)[cur+1].type == Tid)    //присваивание
+                                {
+                                    rule = *Rules[0].rule;
+                                }
+                                else if ((*lex)[cur+1].type == Tmain)   //вызов функции в Операторе
+                                {
+//                                    outStream << QString("main!\n");
+//                                    outStream.flush();
+                                    rule = *Rules[1].rule;
+                                }
+                                break;
+                            }
+                            default:{
+                                if ((*lex)[cur+1].type == Teq)    //присваивание
+                                {
+                                    rule = *Rules[0].rule;
+                                }
+                                else if ((*lex)[cur+1].type == Tls && Lex->type == NOperator)   //вызов функции в Операторе
+                                    {
+                                        rule = *Rules[1].rule;
+                                    }
+                                    else
+                                    {
+                                        rule = *Rules[2].rule;
+                                    }
+                                break;
+                            }
                         }
-                        else if ((*lex)[cur+1].type == Tls && Lex->type == NOperator)   //вызов функции в Операторе
-                        {
-                            rule = *Rules[1].rule;
-                        }
-                        else
-                        {
-                            rule = *Rules[2].rule;
-                        }
+
+
                         for (int i = 0; i < rule.count(); i++) //проходим все правило
                         {
                             Stack.push(*rule[i]);            //добавляем в стек
