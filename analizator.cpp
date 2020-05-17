@@ -235,7 +235,7 @@ bool Analizator::Data ()
 ///
         else        //помещаем идентификатор в таблицу
         {
-            if (t1 == TypeInt || t1 == TypeChar || t1 == TypeLong)
+            if (t1 == Node::semTypes::TypeInt || t1 == Node::semTypes::TypeChar || t1 == Node::semTypes::TypeLong)
             {
                 T->Cur->semToTable(new Node ((*lex)[cur].image, t1));   //помещаем в таблицу (дерево)
             }
@@ -279,7 +279,7 @@ bool Analizator::SOper ()     //составной оператор
     else
     {
         ///
-        T->Cur->addLeft(new Node ("", TypeEmpty));//!!!!!!!!!!!!!!!
+        T->Cur->addLeft(new Node ("", Node::semTypes::TypeEmpty));//!!!!!!!!!!!!!!!
         T->Cur = T->Cur->Left;
         T->Cur = T->Cur->Right;    //уходим вправо //T->Cur->semToRight();
         ///
@@ -680,7 +680,7 @@ bool Analizator::A7 ()     //A7
             tv = T->semType(&(*lex)[cur]);   //определим тип
         else        //id
         {
-            tv = TypeUnKnown;
+            tv = Node::semTypes::TypeUnKnown;
             Tree *ptr = T->Cur->Find((*lex)[cur].image);     //ищем идентификатор
             //int t1;
             if (ptr == nullptr)     //ид не нашелся
@@ -706,7 +706,7 @@ bool Analizator::Function ()     //РІС‹Р·РѕРІ С„СѓРЅРєС†�
     else
     {
     /////
-        ptr = T->Cur->Find(new Node ((*lex)[cur].image, TypeFunc));     //ищем функцию
+        ptr = T->Cur->Find(new Node ((*lex)[cur].image, Node::semTypes::TypeFunc));     //ищем функцию
 
         if (ptr == nullptr)     //ид не нашелся
             T->semError("Необъявленная функция", &(*lex)[cur]);

@@ -1,38 +1,38 @@
 #ifndef LLANALIZATOR_H
 #define LLANALIZATOR_H
 
-#define Tvoid 1
-#define Tmain 2
-#define Tfor 3
-#define Tint 4
-#define Tlong 5
-#define Tchar 6
-#define Tid 10
-#define Tcchar 20
-#define Tint10 21
-#define Tint8 28
-#define Tint16 26
+//#define Tvoid 1
+//#define Tmain 2
+//#define Tfor 3
+//#define Tint 4
+//#define Tlong 5
+//#define Tchar 6
+//#define Tid 10
+//#define Tcchar 20
+//#define Tint10 21
+//#define Tint8 28
+//#define Tint16 26
 
-#define Tzap 31
-#define Tdt 32
-#define Tls 33
-#define Trs 34
-#define Tlf 35
-#define Trf 36
-#define Tvch 40
-#define Tamp 41
-#define Tlsd 42
-#define Trsd 43
-#define Tplus 44
-#define Tminus 45
-#define Tdel 46
-#define Tmul 47
-#define Tpers 48
-#define Ttil 49
-#define Teq 50
+//#define Tzap 31
+//#define Tdt 32
+//#define Tls 33
+//#define Trs 34
+//#define Tlf 35
+//#define Trf 36
+//#define Tvch 40
+//#define Tamp 41
+//#define Tlsd 42
+//#define Trsd 43
+//#define Tplus 44
+//#define Tminus 45
+//#define Tdel 46
+//#define Tmul 47
+//#define Tpers 48
+//#define Ttil 49
+//#define Teq 50
 
-#define Tend 100
-#define Terr 200
+//#define Tend 100
+//#define Terr 200
 
 #define NS 101
 #define NData 102
@@ -66,15 +66,15 @@
 #define ND 130
 
 
+#include "treell.h"
 #include <iostream>
 #include <QTextStream>
 #include <qdebug.h>
-#include "lexem.h"
 #include "QList"
 #include "scanner.h"
-#include "locale.h"
-#include "tree.h"
 #include <rule.h>
+
+#include "locale.h"
 #include <QStack>
 
 class LLAnalizator
@@ -88,13 +88,54 @@ public:
 
 
     bool isError;
+    bool isSemError;
     int cur;    ///текущая вершина
-    int tv;     ///тип выражения. Устанавливается в A7()
+    /**
+     * @brief тип выражения. Устанавливается в A7()
+     */
+    int tv;
+
+    bool isDecl = false;
+    int type1;
+    int type2;
+
+
     Scanner *scaner;
     QList <Lexem> *lex;
     bool right;
-//    Tree* T;
+    TreeLL *T;
     QString ErrorText;
+    QString ErrorSem;
+private:
+    /**
+     * @brief установить флаг описания данных и запомнить тип в глобальной  переменной dataType
+     */
+    void startDecl();
+    /**
+     * @brief проверить дублирование, занести идентификатор в семантическую таблицу с dataType
+     */
+    bool setIdent();
+    /**
+     * @brief сбросить флаг описания данных
+     */
+    void endDecl();
+    /**
+     * @brief перейти на новый уровень в дереве
+     */
+    void setNewLevel ();
+    /**
+     * @brief подняться на предыдущий уровень в дереве
+     */
+    void returnLevel ();
+    /**
+     * @brief проверить дублирование,добавить функцию в семантическую таблицу
+     */
+    bool setFunct ();
+    /**
+     * @brief Находит
+     * @return
+     */
+    TreeLL* findId ();
 };
 
 #endif // LLANALIZATOR_H

@@ -1,5 +1,5 @@
-#ifndef TREE_H
-#define TREE_H
+#ifndef TREELL_H
+#define TREELL_H
 #include <node.h>
 #include <iostream>
 #include <QTextStream>
@@ -49,6 +49,7 @@ public:
     TreeLL *Parent, *Left, *Right;
     static TreeLL * Cur;      //текущая вершина
     static TreeLL * F;        //текущая функция
+
     TreeLL();
     TreeLL(Node *n);
     TreeLL(TreeLL *p, TreeLL *l, TreeLL *r, Node *n);
@@ -62,11 +63,11 @@ public:
     TreeLL *FindRightLeft (TreeLL *From, Node* n);   //поиск среди прямых потомков. Может вернуть null если нету
     TreeLL *FindRightLeft (Node* n);   //поиск среди прямых потомков. Может вернуть null если нету
     int semType (Lexem *lex);   //определение семантического типа
-    bool semToTable (Node *n);  //проверка на дублирование, занесение идентификатора вместе с семантическим типом в таблицу
+    bool idToTable (Node *n);  //проверка на дублирование, занесение идентификатора вместе с семантическим типом в таблицу
     bool semFToTable (QString name); //занесение имени функции вместе с типом возвращаемого значения в таблицу, создание пустой правой вершины. Возвращает указатель на созданную
     void semSetParAmount (TreeLL* f, int n);    //установить число параметров
-    void semRep ();     ///восстановление указателя на вершину. Поднимаемся по левым связям и подн. на след уровень
-    void semToRight ();     //уйти вправо
+    void semRep ();     //восстановление указателя на вершину. Поднимаемся по левым связям и подн. на след уровень
+    void semToRight ();     //уйти вправо, создав новый уровень
     void semInc (TreeLL *func);       //увеличить число параметров функции
     void semInc ();       //увеличить число параметров функции
     void semError (std::string err, Lexem* L);
@@ -77,5 +78,5 @@ public:
     int semTypeResUn (int o1, Lexem* l);      //проверка результата для унарных операций
 };
 
-#endif // TREE_H
+#endif // TREELL_H
 

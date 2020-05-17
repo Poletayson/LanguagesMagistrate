@@ -43,6 +43,8 @@
 class Tree
 {
 public:
+    enum functions {startDecl = 201, setIdent, endDecl, setFunct, setNewLevel, returnLevel, endFunct, match, find, constType, push_t, matchLeft};   //семантические функции
+
     Node *N;
     Tree *Parent, *Left, *Right;
     static Tree * Cur;      //текущая вершина

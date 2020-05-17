@@ -2,22 +2,25 @@
 #define NODE_H
 #include <QString>
 
-#define TypeVoid 0
-#define TypeMain 1
-#define TypeFunc 2
-#define TypeInt 3
-#define TypeLong 4
-#define TypeChar 5
+//семантические типы
+//#define TypeVoid 0
+//#define TypeMain 1
+//#define TypeFunc 2
+//#define TypeInt 3
+//#define TypeLong 4
+//#define TypeChar 5
 
-#define TypeUnKnown -1
-#define TypeEmpty 10
+//#define TypeUnKnown -1
+//#define TypeEmpty 10
 
 class Node
 {
 public:
+    enum semTypes {TypeVoid = 0, TypeMain, TypeFunc, TypeInt, TypeLong, TypeChar, TypeUnKnown = -1, TypeEmpty = 10};
     QString Id;         //изображение объекта
     int TypeObj;          //тип
     int ParamCount;     //число параметров функции
     Node(QString I, int T, int c = 0);
+//    static int getSemType (int type);
 };
 #endif // NODE_H

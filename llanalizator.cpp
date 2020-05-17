@@ -1,5 +1,5 @@
 #include "llanalizator.h"
-#include "treell.h"
+
 
 LLAnalizator::LLAnalizator()
 {
@@ -87,23 +87,34 @@ LLAnalizator::LLAnalizator()
     QMultiMap <int, QList<Rule>> Sting;    //строка таблицы, соответствующая нетерминалу
 //нетерминал S
     Cell.append(new Lexem (NS, true));
+    Cell.append(new Lexem (TreeLL::functions::endFunct, true));
+    Cell.append(new Lexem (TreeLL::functions::returnLevel, true));
+    Cell.append(new Lexem (TreeLL::functions::returnLevel, true));
     Cell.append(new Lexem (Trf, false));
     Cell.append(new Lexem (NBlock, true));
+    Cell.append(new Lexem (TreeLL::functions::setNewLevel, true));
     Cell.append(new Lexem (Tlf, false));
     Cell.append(new Lexem (Trs, false));
     Cell.append(new Lexem (NSpPar, true));
+    Cell.append(new Lexem (TreeLL::functions::setNewLevel, true));
     Cell.append(new Lexem (Tls, false));
+    Cell.append(new Lexem (TreeLL::functions::setFunct, true));
     Cell.append(new Lexem (Tid, false));
     Cell.append(new Lexem (Tvoid, false));
     Rules.append(*new Rule (&Cell));    //добавляем правило
     Sting.insert(Tvoid, Rules);      //добавляем список правил в ячейку строки
 
     Cell.append(new Lexem (NS, true));
+    Cell.append(new Lexem (TreeLL::functions::endFunct, true));
+    Cell.append(new Lexem (TreeLL::functions::returnLevel, true));
+    Cell.append(new Lexem (TreeLL::functions::returnLevel, true));
     Cell.append(new Lexem (Trf, false));
     Cell.append(new Lexem (NBlock, true));
+    Cell.append(new Lexem (TreeLL::functions::setNewLevel, true));
     Cell.append(new Lexem (Tlf, false));
     Cell.append(new Lexem (Trs, false));
     Cell.append(new Lexem (NSpPar, true));
+    Cell.append(new Lexem (TreeLL::functions::setNewLevel, true));
     Cell.append(new Lexem (Tls, false));
     Cell.append(new Lexem (Tmain, false));
     Cell.append(new Lexem (Tvoid, false));
@@ -112,29 +123,35 @@ LLAnalizator::LLAnalizator()
 
     Cell.clear();   //int
     Cell.append(new Lexem (NS, true));
+    Cell.append(new Lexem (TreeLL::functions::endDecl, true));
     Cell.append(new Lexem (Tdt, false));
     Cell.append(new Lexem (NSpIdent, true));
     Cell.append(new Lexem (Tint, false));
+    Cell.append(new Lexem (TreeLL::functions::startDecl, true));
     Rules.clear();
     Rules.append(*new Rule (&Cell));
     Sting.insert(Tint, Rules);      //добавляем список правил в ячейку строки
 
     Cell.clear();   //char
     Cell.append(new Lexem (NS, true));
+    Cell.append(new Lexem (TreeLL::functions::endDecl, true));
     Cell.append(new Lexem (Tdt, false));
-    Cell.append(new Lexem (NSpIdent, true));
+    Cell.append(new Lexem (NSpIdent, true));  
     Cell.append(new Lexem (Tchar, false));
+    Cell.append(new Lexem (TreeLL::functions::startDecl, true));
     Rules.clear();
     Rules.append(*new Rule (&Cell));
     Sting.insert(Tchar, Rules);      //добавляем список правил в ячейку строки
 
     Cell.clear();   //long
     Cell.append(new Lexem (NS, true));
+    Cell.append(new Lexem (TreeLL::functions::endDecl, true));
     Cell.append(new Lexem (Tdt, false));
     Cell.append(new Lexem (NSpIdent, true));
     Cell.append(new Lexem (Tint, false));
     Cell.append(new Lexem (Tlong, false));
     Cell.append(new Lexem (Tlong, false));
+    Cell.append(new Lexem (TreeLL::functions::startDecl, true));
     Rules.clear();
     Rules.append(*new Rule (&Cell));
     Sting.insert(Tlong, Rules);      //добавляем список правил в ячейку строки
@@ -150,27 +167,33 @@ LLAnalizator::LLAnalizator()
     Sting.clear();    //строка таблицы, соответствующая нетерминалу
 
     Cell.clear();   //int
+    Cell.append(new Lexem (TreeLL::functions::endDecl, true));
     Cell.append(new Lexem (Tdt, false));
     Cell.append(new Lexem (NSpIdent, true));
     Cell.append(new Lexem (Tint, false));
+    Cell.append(new Lexem (TreeLL::functions::startDecl, true));
     Rules.clear();
     Rules.append(*new Rule (&Cell));
     Sting.insert(Tint, Rules);      //добавляем список правил в ячейку строки
 
     Cell.clear();   //char
+    Cell.append(new Lexem (TreeLL::functions::endDecl, true));
     Cell.append(new Lexem (Tdt, false));
     Cell.append(new Lexem (NSpIdent, true));
     Cell.append(new Lexem (Tchar, false));
+    Cell.append(new Lexem (TreeLL::functions::startDecl, true));
     Rules.clear();
     Rules.append(*new Rule (&Cell));
     Sting.insert(Tchar, Rules);      //добавляем список правил в ячейку строки
 
     Cell.clear();   //long
+    Cell.append(new Lexem (TreeLL::functions::endDecl, true));
     Cell.append(new Lexem (Tdt, false));
     Cell.append(new Lexem (NSpIdent, true));
-    Cell.append(new Lexem (Tlong, false));
-    Cell.append(new Lexem (Tlong, false));
     Cell.append(new Lexem (Tint, false));
+    Cell.append(new Lexem (Tlong, false));
+    Cell.append(new Lexem (Tlong, false));
+    Cell.append(new Lexem (TreeLL::functions::startDecl, true));
     Rules.clear();
     Rules.append(*new Rule (&Cell));
     Sting.insert(Tlong, Rules);      //добавляем список правил в ячейку строки
@@ -182,31 +205,37 @@ LLAnalizator::LLAnalizator()
 
     Cell.clear();   //int
     Cell.append(new Lexem (NB, true));
-    Cell.append(new Lexem (Tid, false));
+    Cell.append(new Lexem (TreeLL::functions::setIdent, true));
+    Cell.append(new Lexem (Tid, false)); 
     Cell.append(new Lexem (Tint, false));
+    Cell.append(new Lexem (TreeLL::functions::startDecl, true));
     Rules.clear();
     Rules.append(*new Rule (&Cell));
     Sting.insert(Tint, Rules);      //добавляем список правил в ячейку строки
 
     Cell.clear();   //char
     Cell.append(new Lexem (NB, true));
-    Cell.append(new Lexem (Tid, false));
+    Cell.append(new Lexem (TreeLL::functions::setIdent, true));
+    Cell.append(new Lexem (Tid, false)); 
     Cell.append(new Lexem (Tchar, false));
+    Cell.append(new Lexem (TreeLL::functions::startDecl, true));
     Rules.clear();
     Rules.append(*new Rule (&Cell));
     Sting.insert(Tchar, Rules);      //добавляем список правил в ячейку строки
 
     Cell.clear();   //long
     Cell.append(new Lexem (NB, true));
-    Cell.append(new Lexem (Tid, false));
-    Cell.append(new Lexem (Tlong, false));
-    Cell.append(new Lexem (Tlong, false));
+    Cell.append(new Lexem (TreeLL::functions::setIdent, true));
+    Cell.append(new Lexem (Tid, false));    
     Cell.append(new Lexem (Tint, false));
+    Cell.append(new Lexem (Tlong, false));
+    Cell.append(new Lexem (Tlong, false));
+    Cell.append(new Lexem (TreeLL::functions::startDecl, true));
     Rules.clear();
     Rules.append(*new Rule (&Cell));
     Sting.insert(Tlong, Rules);      //добавляем список правил в ячейку строки
 
-    Cell.clear();   //char
+    Cell.clear();   //)
     Cell.append(new Lexem (NB, true));
     Rules.clear();
     Rules.append(*new Rule (&Cell));
@@ -218,6 +247,7 @@ LLAnalizator::LLAnalizator()
     Sting.clear();    //строка таблицы, соответствующая нетерминалу
 
     Cell.clear();   //)
+    Cell.append(new Lexem (TreeLL::functions::endDecl, true));
     Rules.clear();
     Rules.append(*new Rule (&Cell));
     Sting.insert(Trs, Rules);      //добавляем список правил в ячейку строки
@@ -236,24 +266,30 @@ LLAnalizator::LLAnalizator()
         Sting.clear();    //строка таблицы, соответствующая нетерминалу
 
         Cell.clear();   //int
-        Cell.append(new Lexem (Tid, false));
+        Cell.append(new Lexem (TreeLL::functions::setIdent, true));
+        Cell.append(new Lexem (Tid, false));       
         Cell.append(new Lexem (Tint, false));
+        Cell.append(new Lexem (TreeLL::functions::startDecl, true));
         Rules.clear();
         Rules.append(*new Rule (&Cell));
         Sting.insert(Tint, Rules);      //добавляем список правил в ячейку строки
 
         Cell.clear();   //char
-        Cell.append(new Lexem (Tid, false));
+        Cell.append(new Lexem (TreeLL::functions::setIdent, true));
+        Cell.append(new Lexem (Tid, false));      
         Cell.append(new Lexem (Tchar, false));
+        Cell.append(new Lexem (TreeLL::functions::startDecl, true));
         Rules.clear();
         Rules.append(*new Rule (&Cell));
         Sting.insert(Tchar, Rules);      //добавляем список правил в ячейку строки
 
         Cell.clear();   //long
+        Cell.append(new Lexem (TreeLL::functions::setIdent, true));
         Cell.append(new Lexem (Tid, false));
-        Cell.append(new Lexem (Tlong, false));
-        Cell.append(new Lexem (Tlong, false));
         Cell.append(new Lexem (Tint, false));
+        Cell.append(new Lexem (Tlong, false));
+        Cell.append(new Lexem (Tlong, false));
+        Cell.append(new Lexem (TreeLL::functions::startDecl, true));
         Rules.clear();
         Rules.append(*new Rule (&Cell));
         Sting.insert(Tlong, Rules);      //добавляем список правил в ячейку строки
@@ -266,6 +302,7 @@ LLAnalizator::LLAnalizator()
         Cell.clear();   //id
         Cell.append(new Lexem (NC, true));
         Cell.append(new Lexem (NInit, true));
+        Cell.append(new Lexem (TreeLL::functions::setIdent, true));
         Cell.append(new Lexem (Tid, false));
 
         Rules.clear();
@@ -285,7 +322,8 @@ LLAnalizator::LLAnalizator()
         Cell.clear();   //id
         Cell.append(new Lexem (NC, true));
         Cell.append(new Lexem (NInit, true));
-        Cell.append(new Lexem (Tid, false));
+        Cell.append(new Lexem (TreeLL::functions::setIdent, true));
+        Cell.append(new Lexem (Tid, false));       
         Cell.append(new Lexem (Tzap, false));
 
         Rules.clear();
@@ -403,6 +441,7 @@ LLAnalizator::LLAnalizator()
         Sting.clear();    //строка таблицы, соответствующая нетерминалу
 
         Cell.clear();   //int
+        Cell.append(new Lexem (TreeLL::functions::returnLevel, true));
         Cell.append(new Lexem (NOperator, true));
         Cell.append(new Lexem (Trs, false));
         Cell.append(new Lexem (NEndIter, true));
@@ -410,6 +449,7 @@ LLAnalizator::LLAnalizator()
         Cell.append(new Lexem (NA1, true));
         //Cell.append(new Lexem (Tdt, false));
         Cell.append(new Lexem (NInitCycle, true));
+        Cell.append(new Lexem (TreeLL::functions::setNewLevel, true));
         Cell.append(new Lexem (Tls, false));
         Cell.append(new Lexem (Tfor, false));
         Rules.clear();
@@ -464,49 +504,62 @@ LLAnalizator::LLAnalizator()
 
         Table.insert(NEndIter, Sting);
 
-//prisv
+//Присваивание
         Sting.clear();    //строка таблицы, соответствующая нетерминалу
 
-        Cell.clear();   //;
+        Cell.clear();   //id
         //Cell.append(new Lexem (Tdt, false));
         Cell.append(new Lexem (NA1, true));
         Cell.append(new Lexem (Teq, false));
+        Cell.append(new Lexem (TreeLL::functions::find, true));
         Cell.append(new Lexem (Tid, false));
+
         Rules.clear();
         Rules.append(*new Rule (&Cell));
         Sting.insert(Tid, Rules);      //добавляем список правил в ячейку строки
 
         Table.insert(NPrisv, Sting);
 
-//операнд
+//Операнд
         Sting.clear();    //строка таблицы, соответствующая нетерминалу
 
-        Cell.clear();   //;
+        Cell.clear();   //id
+        Cell.append(new Lexem (TreeLL::functions::push_t, true));
+        Cell.append(new Lexem (TreeLL::functions::find, true));
         Cell.append(new Lexem (Tid, false));
+
         Rules.clear();
         Rules.append(*new Rule (&Cell));
         Sting.insert(Tid, Rules);      //добавляем список правил в ячейку строки
 
         Cell.clear();   //;
         Cell.append(new Lexem (Tint8, false));
+        Cell.append(new Lexem (TreeLL::functions::push_t, true));
+        Cell.append(new Lexem (TreeLL::functions::constType, true));
         Rules.clear();
         Rules.append(*new Rule (&Cell));
         Sting.insert(Tint8, Rules);      //добавляем список правил в ячейку строки
 
         Cell.clear();   //;
         Cell.append(new Lexem (Tint10, false));
+        Cell.append(new Lexem (TreeLL::functions::push_t, true));
+        Cell.append(new Lexem (TreeLL::functions::constType, true));
         Rules.clear();
         Rules.append(*new Rule (&Cell));
         Sting.insert(Tint10, Rules);      //добавляем список правил в ячейку строки
 
         Cell.clear();   //;
         Cell.append(new Lexem (Tint16, false));
+        Cell.append(new Lexem (TreeLL::functions::push_t, true));
+        Cell.append(new Lexem (TreeLL::functions::constType, true));
         Rules.clear();
         Rules.append(*new Rule (&Cell));
         Sting.insert(Tint16, Rules);      //добавляем список правил в ячейку строки
 
         Cell.clear();   //;
         Cell.append(new Lexem (Tcchar, false));
+        Cell.append(new Lexem (TreeLL::functions::push_t, true));
+        Cell.append(new Lexem (TreeLL::functions::constType, true));
         Rules.clear();
         Rules.append(*new Rule (&Cell));
         Sting.insert(Tcchar, Rules);      //добавляем список правил в ячейку строки
@@ -535,6 +588,7 @@ LLAnalizator::LLAnalizator()
 
         Cell.clear();   //;
         Cell.append(new Lexem (NA11, true));
+        Cell.append(new Lexem (TreeLL::functions::match, true));
         Cell.append(new Lexem (NA2, true));
         Cell.append(new Lexem (Tvch, false));
         Rules.clear();
@@ -572,6 +626,7 @@ LLAnalizator::LLAnalizator()
 
         Cell.clear();   //;
         Cell.append(new Lexem (NA21, true));
+        Cell.append(new Lexem (TreeLL::functions::match, true));
         Cell.append(new Lexem (NA3, true));
         Cell.append(new Lexem (Tamp, false));
         Rules.clear();
@@ -610,14 +665,17 @@ LLAnalizator::LLAnalizator()
 
         Cell.clear();   //;
         Cell.append(new Lexem (NA31, true));
+        Cell.append(new Lexem (TreeLL::functions::match, true));
         Cell.append(new Lexem (NA4, true));
         Cell.append(new Lexem (Tlsd, false));
         Cell.append(new Lexem (Tlsd, false));
         Rules.clear();
         Rules.append(*new Rule (&Cell));
         Sting.insert(Tlsd, Rules);      //добавляем список правил в ячейку строки
+
         Cell.clear();   //;
         Cell.append(new Lexem (NA31, true));
+        Cell.append(new Lexem (TreeLL::functions::match, true));
         Cell.append(new Lexem (NA4, true));
         Cell.append(new Lexem (Trsd, false));
         Cell.append(new Lexem (Trsd, false));
@@ -658,6 +716,7 @@ LLAnalizator::LLAnalizator()
 
         Cell.clear();   //;
         Cell.append(new Lexem (NA41, true));
+        Cell.append(new Lexem (TreeLL::functions::match, true));
         Cell.append(new Lexem (NA5, true));
         Cell.append(new Lexem (Tplus, false));
         Rules.clear();
@@ -665,6 +724,7 @@ LLAnalizator::LLAnalizator()
         Sting.insert(Tplus, Rules);      //добавляем список правил в ячейку строки
         Cell.clear();   //;
         Cell.append(new Lexem (NA41, true));
+        Cell.append(new Lexem (TreeLL::functions::match, true));
         Cell.append(new Lexem (NA5, true));
         Cell.append(new Lexem (Tminus, false));
         Rules.clear();
@@ -706,6 +766,7 @@ LLAnalizator::LLAnalizator()
 
         Cell.clear();   //;
         Cell.append(new Lexem (NA51, true));
+        Cell.append(new Lexem (TreeLL::functions::match, true));
         Cell.append(new Lexem (NA6, true));
         Cell.append(new Lexem (Tmul, false));
         Rules.clear();
@@ -713,6 +774,7 @@ LLAnalizator::LLAnalizator()
         Sting.insert(Tmul, Rules);      //добавляем список правил в ячейку строки
         Cell.clear();   //;
         Cell.append(new Lexem (NA51, true));
+        Cell.append(new Lexem (TreeLL::functions::match, true));
         Cell.append(new Lexem (NA6, true));
         Cell.append(new Lexem (Tdel, false));
         Rules.clear();
@@ -720,6 +782,7 @@ LLAnalizator::LLAnalizator()
         Sting.insert(Tdel, Rules);      //добавляем список правил в ячейку строки
         Cell.clear();   //;
         Cell.append(new Lexem (NA51, true));
+        Cell.append(new Lexem (TreeLL::functions::match, true));
         Cell.append(new Lexem (NA6, true));
         Cell.append(new Lexem (Tpers, false));
         Rules.clear();
@@ -846,7 +909,7 @@ LLAnalizator::LLAnalizator()
 
 void LLAnalizator::toAnalize ()
 {
-    int c;
+    //int c;
     scaner->toScan(lex);         //получаем список лексем
     QString type;
     QTextStream outStream(stdout);
@@ -862,85 +925,147 @@ void LLAnalizator::toAnalize ()
         outStream<<'\n';
         outStream<<"Lexical error in "<<scaner->Errors[i][0]<<":"<<scaner->Errors[i][1];
     }
-//    T = new Tree ();
-//    T->Cur = T;
+    T = new TreeLL ();  //дерево
+    T->Cur = T;
     Lexem *Lex;
     Lexem *NT;
     if(scaner->Errors.count() == 0)      //нет лексических ошибок
     {
         ErrorText = "\n Обнаружена ошибка в ";
+        ErrorSem = "\n Семантическая ошибка в ";
 
         QList<Rule> Rules;
         QMultiMap <int, QList<Rule>> Sting;    //строка таблицы, соответствующая нетерминалу
         cur = 0;
         isError = false;
+        isSemError = false;
         QList <Lexem*> rule;
         Lex = new Lexem (NS, true);
         Stack.append(*Lex);             //аксиому в стек
-        while (cur < lex->count() - 1 && !isError)        //стек непустой
+        while (cur < lex->count() - 1 && !isError && !isSemError)        //пока не прошли всю цепочку и нет ошибок
         {
             Lex = new Lexem (Stack.pop ());     //получаем лексему из стека
             if (Lex->isNT == true)              //в магазине - нетерминал
             {
-                NT = Lex;
-                Sting = Table.value(Lex->type);     //получаем строку правил для этого НТ
-                Rules = Sting.value((*lex)[cur].type);  //список правил в ячейке
-                if (Rules.count() > 0)
-                {
-                    if (Rules.count() == 1) //НЕ коллизия//(!((*lex)[cur].type == Tid && (Lex->type  == NOperator || Lex->type  == NEndIter)))  //ячейка без коллизий
-                    {
-                        rule = *Rules[0].rule;
-                        for (int i = 0; i < rule.count(); i++) //проходим все правило
-                        {
-                            Stack.push(*rule[i]);            //добавляем в стек
+                //сем. функция
+                if (Lex->type >= TreeLL::functions::startDecl){
+                    switch (Lex->type) {
+                        case TreeLL::functions::startDecl:{
+                            startDecl();
+                            break;
                         }
-                    }
-                    else    //рассмотрим коллизию
-                    {
-                        switch (Lex->type) {
-                            case NS:{
-                                if ((*lex)[cur+1].type == Tid)    //присваивание
-                                {
-                                    rule = *Rules[0].rule;
-                                }
-                                else if ((*lex)[cur+1].type == Tmain)   //вызов функции в Операторе
-                                {
-//                                    outStream << QString("main!\n");
-//                                    outStream.flush();
-                                    rule = *Rules[1].rule;
-                                }
-                                break;
+                        case TreeLL::functions::endDecl:{
+                            endDecl();
+                            break;
+                        }
+                        case TreeLL::functions::setIdent:{
+                            if(!setIdent()){
+                                isSemError = true;
+                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": повторное определение\n";
+//                                ErrorText = ErrorText + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": повторное определение\n";
+//                                T->semError("Повторное определение", &(*lex)[cur]);
                             }
-                            default:{
-                                if ((*lex)[cur+1].type == Teq)    //присваивание
-                                {
-                                    rule = *Rules[0].rule;
-                                }
-                                else if ((*lex)[cur+1].type == Tls && Lex->type == NOperator)   //вызов функции в Операторе
+                            break;
+                        }
+                        case TreeLL::functions::setNewLevel:{
+                            setNewLevel();
+                            break;
+                        }
+                        case TreeLL::functions::returnLevel:{
+                            returnLevel();
+                            break;
+                        }
+                    case TreeLL::functions::setFunct:{
+                        if (!setFunct())    //дублирование функции
+                        {
+                            isSemError = true;
+                            ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": повторное определение функции\n";
+                        }
+                        break;
+                    }
+                    case TreeLL::functions::find:{
+                        TreeLL* id = findId();
+                        if (id == nullptr)    //Необъявленная  переменная
+                        {
+                            isSemError = true;
+                            ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": необъявленная  переменная\n";
+//                            T->semError("Необъявленная  переменная", &(*lex)[cur]);
+                        }
+                        else {
+                            type1 = id->N->TypeObj; //тип
+                        }
+                        break;
+                    }
+
+
+
+
+
+
+                    }
+                }
+                //просто НТ
+                else {
+                    NT = Lex;
+                    Sting = Table.value(Lex->type);     //получаем строку правил для этого НТ
+                    Rules = Sting.value((*lex)[cur].type);  //список правил в ячейке
+                    if (Rules.count() > 0)
+                    {
+                        if (Rules.count() == 1) //ячейка без коллизий
+                        {
+                            rule = *Rules[0].rule;
+                            for (int i = 0; i < rule.count(); i++) //проходим все правило
+                            {
+                                Stack.push(*rule[i]);            //добавляем в стек
+                            }
+                        }
+                        else    //рассмотрим коллизию
+                        {
+                            switch (Lex->type) {
+                                case NS:{
+                                    if ((*lex)[cur+1].type == Tid)    //присваивание
+                                    {
+                                        rule = *Rules[0].rule;
+                                    }
+                                    else if ((*lex)[cur+1].type == Tmain)   //вызов функции в Операторе
                                     {
                                         rule = *Rules[1].rule;
                                     }
-                                    else
+                                    break;
+                                }
+                                default:{
+                                    if ((*lex)[cur+1].type == Teq)    //присваивание
                                     {
-                                        rule = *Rules[2].rule;
+                                        rule = *Rules[0].rule;
                                     }
-                                break;
+                                    else if ((*lex)[cur+1].type == Tls && Lex->type == NOperator)   //вызов функции в Операторе
+                                        {
+                                            rule = *Rules[1].rule;
+                                        }
+                                        else
+                                        {
+                                            rule = *Rules[2].rule;
+                                        }
+                                    break;
+                                }
+                            }
+
+
+                            for (int i = 0; i < rule.count(); i++) //проходим все правило
+                            {
+                                Stack.push(*rule[i]);            //добавляем в стек
                             }
                         }
-
-
-                        for (int i = 0; i < rule.count(); i++) //проходим все правило
-                        {
-                            Stack.push(*rule[i]);            //добавляем в стек
-                        }
+                    }
+                    else
+                    {
+                        isError = true;
+                        ErrorText = ErrorText + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) +":";  //<<" в конструкции "<<NTerminalsNames.value(NT->type)<<"\n";//". Ожидался "<<NTerminalsNames.value(Lex->type)<<"\n";
+                        ErrorText = ErrorText + " в конструкции " + NTerminalsNames.value(NT->type) + ", неверно используется " + NTerminalsNames.value(Lex->type) + "\n";
                     }
                 }
-                else
-                {
-                    isError = true;
-                    ErrorText = ErrorText + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) +":";  //<<" в конструкции "<<NTerminalsNames.value(NT->type)<<"\n";//". Ожидался "<<NTerminalsNames.value(Lex->type)<<"\n";
-                    ErrorText = ErrorText + " в конструкции " + NTerminalsNames.value(NT->type) + ", неверно используется " + NTerminalsNames.value(Lex->type) + "\n";
-                }
+
+
             }
             else    //из магазина взят терминал
             {
@@ -966,17 +1091,72 @@ void LLAnalizator::toAnalize ()
     outStream << QString("\n");
     outStream.flush();
 
-    if (!isError)
+    if (!isError && !isSemError)
         //if ((*lex)[cur].type == Tend)
-        outStream<<QString("\n Синтаксических ошибок не обнаружено\n");
+        outStream<<QString("\n Ошибок не обнаружено\n");
         //else;
     else
-    {
-        outStream<< ErrorText;
+    {   if (isError)
+            outStream<< ErrorText;
+        else
+            outStream<< ErrorSem;
     }
 
    outStream.flush();
 
 
-    return;
+   return;
+}
+
+void LLAnalizator::startDecl()
+{
+    isDecl = true;
+    //определяем семантический тип
+    int type = Node::semTypes::TypeUnKnown;
+    switch ((*lex)[cur].type) {
+        case Tint:{
+            type = Node::semTypes::TypeInt;
+            break;
+        }
+        case Tlong:{
+            type = Node::semTypes::TypeLong;
+            break;
+        }
+        case Tchar:{
+            type = Node::semTypes::TypeChar;
+            break;
+        }
+    }
+
+    type1 = type;   //запоминаем тип
+}
+
+bool LLAnalizator::setIdent()
+{
+    return T->idToTable(new Node ((*lex)[cur - 1].image, type1));   //проверяем на дублирование и заносим с определенным ранее семантическим типом
+}
+
+void LLAnalizator::endDecl()
+{
+    isDecl = false;
+}
+
+void LLAnalizator::setNewLevel()
+{
+    T->semToRight();
+}
+
+void LLAnalizator::returnLevel()
+{
+    T->semRep();
+}
+
+bool LLAnalizator::setFunct()
+{
+    return T->semFToTable((*lex)[cur - 1].image);
+}
+
+TreeLL* LLAnalizator::findId()
+{
+    return  T->Cur->Find((*lex)[cur - 1].image);     //ищем идентификатор
 }

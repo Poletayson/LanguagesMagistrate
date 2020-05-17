@@ -5,7 +5,7 @@ Tree* Tree::F;
 
 Tree::Tree()        //по умолчанию - пустая вершина
 {
-    N = new Node ("", TypeEmpty);
+    N = new Node ("", Node::semTypes::TypeEmpty);
     Right = Left = Parent = nullptr;
 }
 
@@ -111,42 +111,42 @@ void Tree::addRight (Node *n)
      {
         case Tint:
          {
-            return TypeInt;
+            return Node::semTypes::TypeInt;
          }
      case Tint8:
       {
-         return TypeInt;
+         return Node::semTypes::TypeInt;
       }
      case Tint10:
       {
-         return TypeInt;
+         return Node::semTypes::TypeInt;
       }
      case Tint16:
       {
-         return TypeInt;
+         return Node::semTypes::TypeInt;
       }
      case Tchar:
       {
-         return TypeChar;
+         return Node::semTypes::TypeChar;
       }
      case Tcchar:
       {
-         return TypeChar;
+         return Node::semTypes::TypeChar;
       }
      case Tlong:
       {
-         return TypeLong;
+         return Node::semTypes::TypeLong;
       }
      case Tmain:
       {
-         return TypeMain;
+         return Node::semTypes::TypeMain;
       }
      case Tvoid:
       {
-         return TypeVoid;
+         return Node::semTypes::TypeVoid;
       }
      default:
-         return TypeUnKnown;
+         return Node::semTypes::TypeUnKnown;
      }
 }
 
@@ -164,7 +164,7 @@ void Tree::addRight (Node *n)
 
 bool Tree::semFToTable (QString name)       //занесение имени функции  в таблицу, создание пустой правой вершины. Устанавливает указатель на правую созданную
 {
-    Node *ptr = new Node (name, TypeFunc);  //создаем
+    Node *ptr = new Node (name, Node::semTypes::TypeFunc);  //создаем
     if (!Cur->Find(name))  //узла еще нет
     {
         Cur->addLeft(ptr);
@@ -190,7 +190,7 @@ void Tree::semRep ()     ///восстановление указателя на
 }
 void Tree::semToRight()        //добавить вершину справа
 {
-    Cur->addRight(new Node ("", TypeEmpty));     //пустая вершина
+    Cur->addRight(new Node ("", Node::semTypes::TypeEmpty));     //пустая вершина
     Cur = Cur->Right;
 }
 
@@ -219,40 +219,40 @@ void Tree::semError(std::string err, Lexem* L)
 
 int Tree::semTypeRes (int o1, int o2, Lexem* l)      //проверка результата операции
 {
-    if (o1 == TypeInt && o2 == TypeInt)
-        return TypeInt;
-    if (o1 == TypeLong && o2 == TypeLong)
-        return TypeLong;
-    if (o1 == TypeLong && o2 == TypeInt)
-        return TypeLong;
-    if (o1 == TypeChar && o2 == TypeChar)
-        return TypeChar;
-    if (o1 == TypeChar && o2 == TypeInt)
-        return TypeChar;
-    if (o1 == TypeInt && o2 == TypeChar)
-        return TypeInt;
-    if (o1 != TypeUnKnown && o2 != TypeUnKnown)
+    if (o1 == Node::semTypes::TypeInt && o2 == Node::semTypes::TypeInt)
+        return Node::semTypes::TypeInt;
+    if (o1 == Node::semTypes::TypeLong && o2 == Node::semTypes::TypeLong)
+        return Node::semTypes::TypeLong;
+    if (o1 == Node::semTypes::TypeLong && o2 == Node::semTypes::TypeInt)
+        return Node::semTypes::TypeLong;
+    if (o1 == Node::semTypes::TypeChar && o2 == Node::semTypes::TypeChar)
+        return Node::semTypes::TypeChar;
+    if (o1 == Node::semTypes::TypeChar && o2 == Node::semTypes::TypeInt)
+        return Node::semTypes::TypeChar;
+    if (o1 == Node::semTypes::TypeInt && o2 == Node::semTypes::TypeChar)
+        return Node::semTypes::TypeInt;
+    if (o1 != Node::semTypes::TypeUnKnown && o2 != Node::semTypes::TypeUnKnown)
         semError("Несоответствие типов", l);
-    return TypeUnKnown;
+    return Node::semTypes::TypeUnKnown;
 }
 int Tree::semTypeResOnlyNum (int o1, int o2, Lexem* l)      //проверка результата операции
 {
-    if (o1 == TypeInt && o2 == TypeInt)
-        return TypeInt;
-    if (o1 == TypeLong && o2 == TypeLong)
-        return TypeLong;
-    if (o1 == TypeLong && o2 == TypeInt)
-        return TypeLong;
-    if (o1 != TypeUnKnown && o2 != TypeUnKnown)
+    if (o1 == Node::semTypes::TypeInt && o2 == Node::semTypes::TypeInt)
+        return Node::semTypes::TypeInt;
+    if (o1 == Node::semTypes::TypeLong && o2 == Node::semTypes::TypeLong)
+        return Node::semTypes::TypeLong;
+    if (o1 == Node::semTypes::TypeLong && o2 == Node::semTypes::TypeInt)
+        return Node::semTypes::TypeLong;
+    if (o1 != Node::semTypes::TypeUnKnown && o2 != Node::semTypes::TypeUnKnown)
         semError("Несоответствие типов", l);
-    return TypeUnKnown;
+    return Node::semTypes::TypeUnKnown;
 }
 
 int Tree::semTypeResUn (int o1, Lexem* l)      //проверка результата унарной операции
 {
-    if (o1 == TypeInt || o1 == TypeLong)
+    if (o1 == Node::semTypes::TypeInt || o1 == Node::semTypes::TypeLong)
         return o1;
-    if (o1 != TypeUnKnown)
+    if (o1 != Node::semTypes::TypeUnKnown)
         semError("Несоответствие типов", l);
-    return TypeUnKnown;
+    return Node::semTypes::TypeUnKnown;
 }
