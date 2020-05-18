@@ -98,6 +98,7 @@ public:
     bool isDecl = false;
     int type1;
     int type2;
+    QStack <int> types;
 
 
     Scanner *scaner;

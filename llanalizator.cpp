@@ -975,32 +975,42 @@ void LLAnalizator::toAnalize ()
                             returnLevel();
                             break;
                         }
-                    case TreeLL::functions::setFunct:{
-                        if (!setFunct())    //дублирование функции
-                        {
-                            isSemError = true;
-                            ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": повторное определение функции\n";
+                        case TreeLL::functions::setFunct:{
+                            if (!setFunct())    //дублирование функции
+                            {
+                                isSemError = true;
+                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": повторное определение функции\n";
+                            }
+                            break;
                         }
-                        break;
-                    }
-                    case TreeLL::functions::find:{
-                        TreeLL* id = findId();
-                        if (id == nullptr)    //Необъявленная  переменная
-                        {
-                            isSemError = true;
-                            ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": необъявленная  переменная\n";
-//                            T->semError("Необъявленная  переменная", &(*lex)[cur]);
+                        case TreeLL::functions::find:{
+                            TreeLL* id = findId();
+                            if (id == nullptr)    //Необъявленная  переменная
+                            {
+                                isSemError = true;
+                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": необъявленная  переменная\n";
+                            }
+                            else {
+                                type1 = id->N->TypeObj; //тип
+                            }
+                            break;
                         }
-                        else {
-                            type1 = id->N->TypeObj; //тип
+                        case TreeLL::functions::constType:{
+
+                            break;
                         }
-                        break;
-                    }
+                        case TreeLL::functions::push_t:{
 
+                            break;
+                        }
+                        case TreeLL::functions::match:{
 
+                            break;
+                        }
+                        case TreeLL::functions::matchLeft:{
 
-
-
+                            break;
+                        }
 
                     }
                 }
