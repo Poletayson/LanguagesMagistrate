@@ -533,33 +533,33 @@ LLAnalizator::LLAnalizator()
         Sting.insert(Tid, Rules);      //добавляем список правил в ячейку строки
 
         Cell.clear();   //;
-        Cell.append(new Lexem (Tint8, false));
         Cell.append(new Lexem (TreeLL::functions::push_t, true));
         Cell.append(new Lexem (TreeLL::functions::constType, true));
+        Cell.append(new Lexem (Tint8, false));
         Rules.clear();
         Rules.append(*new Rule (&Cell));
         Sting.insert(Tint8, Rules);      //добавляем список правил в ячейку строки
 
         Cell.clear();   //;
-        Cell.append(new Lexem (Tint10, false));
         Cell.append(new Lexem (TreeLL::functions::push_t, true));
         Cell.append(new Lexem (TreeLL::functions::constType, true));
+        Cell.append(new Lexem (Tint10, false));
         Rules.clear();
         Rules.append(*new Rule (&Cell));
         Sting.insert(Tint10, Rules);      //добавляем список правил в ячейку строки
 
         Cell.clear();   //;
-        Cell.append(new Lexem (Tint16, false));
         Cell.append(new Lexem (TreeLL::functions::push_t, true));
         Cell.append(new Lexem (TreeLL::functions::constType, true));
+        Cell.append(new Lexem (Tint16, false));
         Rules.clear();
         Rules.append(*new Rule (&Cell));
         Sting.insert(Tint16, Rules);      //добавляем список правил в ячейку строки
 
         Cell.clear();   //;
-        Cell.append(new Lexem (Tcchar, false));
         Cell.append(new Lexem (TreeLL::functions::push_t, true));
         Cell.append(new Lexem (TreeLL::functions::constType, true));
+        Cell.append(new Lexem (Tcchar, false));
         Rules.clear();
         Rules.append(*new Rule (&Cell));
         Sting.insert(Tcchar, Rules);      //добавляем список правил в ячейку строки
@@ -992,11 +992,16 @@ void LLAnalizator::toAnalize ()
                             }
                             else {
                                 type1 = id->N->TypeObj; //тип
+                                types.push(id->N->TypeObj); //кладем тип в стек
                             }
                             break;
                         }
                         case TreeLL::functions::constType:{
-
+                            int t = constType();
+                            if (t != Node::semTypes::TypeInt && t != Node::semTypes::TypeChar && t != Node::semTypes::TypeLong){
+                                isSemError = true;
+                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": некорректный тип константы: " + t + "\n";
+                            }
                             break;
                         }
                         case TreeLL::functions::push_t:{
@@ -1004,11 +1009,31 @@ void LLAnalizator::toAnalize ()
                             break;
                         }
                         case TreeLL::functions::match:{
-
+                            if (match() == Node::semTypes::TypeUnKnown){
+                                isSemError = true;
+                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": несоответствие типов\n";
+                            }
+                            break;
+                        }
+                        case TreeLL::functions::matchNumOnly:{
+                            if (matchNumOnly() == Node::semTypes::TypeUnKnown){
+                                isSemError = true;
+                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": несоответствие типов\n";
+                            }
+                            break;
+                        }
+                        case TreeLL::functions::matchUn:{
+                            if (matchUn() == Node::semTypes::TypeUnKnown){
+                                isSemError = true;
+                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": несоответствие типов\n";
+                            }
                             break;
                         }
                         case TreeLL::functions::matchLeft:{
-
+                            if (match() == Node::semTypes::TypeUnKnown){
+                                isSemError = true;
+                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": несоответствие типов\n";
+                            }
                             break;
                         }
 
@@ -1169,4 +1194,34 @@ bool LLAnalizator::setFunct()
 TreeLL* LLAnalizator::findId()
 {
     return  T->Cur->Find((*lex)[cur - 1].image);     //ищем идентификатор
+}
+
+int LLAnalizator::constType()
+{
+    types.push(T->semType(&(*lex)[cur - 1]));   //определяем тип
+    return types.last();
+}
+
+int LLAnalizator::match()
+{
+    //берем верхние типы, проверяем и кладем результат
+    int t2 = types.pop();
+    int t1 = types.pop();
+    types.push(T->semTypeRes(t1, t2));
+    return types.last();
+}
+
+int LLAnalizator::matchNumOnly()
+{
+    //берем верхние типы, проверяем и кладем результат
+    int t2 = types.pop();
+    int t1 = types.pop();
+    types.push(T->semTypeResOnlyNum(t1, t2));
+    return types.last();
+}
+
+int LLAnalizator::matchUn()
+{
+    types.push(T->semTypeResUn(types.pop()));
+    return types.last();
 }

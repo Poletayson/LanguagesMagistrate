@@ -43,7 +43,7 @@
 class TreeLL
 {
 public:
-    enum functions {startDecl = 201, setIdent, endDecl, setFunct, setNewLevel, returnLevel, endFunct, match, find, constType, push_t, matchLeft};   //семантические функции
+    enum functions {startDecl = 201, setIdent, endDecl, setFunct, setNewLevel, returnLevel, endFunct, match, matchNumOnly, matchUn, find, constType, push_t, matchLeft};   //семантические функции
 
     Node *N;
     TreeLL *Parent, *Left, *Right;
@@ -73,9 +73,9 @@ public:
     void semError (std::string err, Lexem* L);
     bool semSearch (Node* n);       //поиск узла
     bool semParAccord ();       ///проверка соотв. параметров
-    int semTypeRes (int o1, int o2, Lexem* l);      //проверка результата операции
-    int semTypeResOnlyNum (int o1, int o2, Lexem* l);      //проверка результата для ТОЛЬКО числовых операций
-    int semTypeResUn (int o1, Lexem* l);      //проверка результата для унарных операций
+    int semTypeRes (int o1, int o2);      //проверка результата операции
+    int semTypeResOnlyNum (int o1, int o2);      //проверка результата для ТОЛЬКО числовых операций
+    int semTypeResUn (int o1);      //проверка результата для унарных операций
 };
 
 #endif // TREELL_H

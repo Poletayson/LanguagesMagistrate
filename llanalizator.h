@@ -137,6 +137,26 @@ private:
      * @return
      */
     TreeLL* findId ();
+    /**
+     * @brief определить тип константы и поместить в магазин
+     * @return
+     */
+    int constType ();
+    /**
+     * @brief
+     * @return приведенный тип
+     */
+    int match ();
+    /**
+     * @brief
+     * @return приведенный тип
+     */
+    int matchNumOnly ();
+    /**
+     * @brief
+     * @return приведенный тип
+     */
+    int matchUn ();
 };
 
 #endif // LLANALIZATOR_H

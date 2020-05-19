@@ -113,40 +113,40 @@ void TreeLL::addRight (Node *n)
          {
             return Node::semTypes::TypeInt;
          }
-     case Tint8:
-      {
-         return Node::semTypes::TypeInt;
-      }
-     case Tint10:
-      {
-         return Node::semTypes::TypeInt;
-      }
-     case Tint16:
-      {
-         return Node::semTypes::TypeInt;
-      }
-     case Tchar:
-      {
-         return Node::semTypes::TypeChar;
-      }
-     case Tcchar:
-      {
-         return Node::semTypes::TypeChar;
-      }
-     case Tlong:
-      {
-         return Node::semTypes::TypeLong;
-      }
-     case Tmain:
-      {
-         return Node::semTypes::TypeMain;
-      }
-     case Tvoid:
-      {
-         return Node::semTypes::TypeVoid;
-      }
-     default:
-         return Node::semTypes::TypeUnKnown;
+         case Tint8:
+          {
+             return Node::semTypes::TypeInt;
+          }
+         case Tint10:
+          {
+             return Node::semTypes::TypeInt;
+          }
+         case Tint16:
+          {
+             return Node::semTypes::TypeInt;
+          }
+         case Tchar:
+          {
+             return Node::semTypes::TypeChar;
+          }
+         case Tcchar:
+          {
+             return Node::semTypes::TypeChar;
+          }
+         case Tlong:
+          {
+             return Node::semTypes::TypeLong;
+          }
+         case Tmain:
+          {
+             return Node::semTypes::TypeMain;
+          }
+         case Tvoid:
+          {
+             return Node::semTypes::TypeVoid;
+          }
+         default:
+             return Node::semTypes::TypeUnKnown;
      }
 }
 
@@ -217,7 +217,7 @@ void TreeLL::semError(std::string err, Lexem* L)
     std::cout<<"\n Семантическая ошибка в "<<L->str<<":"<<L->pos<<": "<<err;
 }
 
-int TreeLL::semTypeRes (int o1, int o2, Lexem* l)      //проверка результата операции
+int TreeLL::semTypeRes (int o1, int o2)      //проверка результата операции
 {
     if (o1 == Node::semTypes::TypeInt && o2 == Node::semTypes::TypeInt)
         return Node::semTypes::TypeInt;
@@ -231,11 +231,11 @@ int TreeLL::semTypeRes (int o1, int o2, Lexem* l)      //проверка рез
         return Node::semTypes::TypeChar;
     if (o1 == Node::semTypes::TypeInt && o2 == Node::semTypes::TypeChar)
         return Node::semTypes::TypeInt;
-    if (o1 != Node::semTypes::TypeUnKnown && o2 != Node::semTypes::TypeUnKnown)
-        semError("Несоответствие типов", l);
+//    if (o1 != Node::semTypes::TypeUnKnown && o2 != Node::semTypes::TypeUnKnown)
+//        semError("Несоответствие типов", l);
     return Node::semTypes::TypeUnKnown;
 }
-int TreeLL::semTypeResOnlyNum (int o1, int o2, Lexem* l)      //проверка результата операции
+int TreeLL::semTypeResOnlyNum (int o1, int o2)      //проверка результата операции
 {
     if (o1 == Node::semTypes::TypeInt && o2 == Node::semTypes::TypeInt)
         return Node::semTypes::TypeInt;
@@ -243,16 +243,16 @@ int TreeLL::semTypeResOnlyNum (int o1, int o2, Lexem* l)      //проверка
         return Node::semTypes::TypeLong;
     if (o1 == Node::semTypes::TypeLong && o2 == Node::semTypes::TypeInt)
         return Node::semTypes::TypeLong;
-    if (o1 != Node::semTypes::TypeUnKnown && o2 != Node::semTypes::TypeUnKnown)
-        semError("Несоответствие типов", l);
+//    if (o1 != Node::semTypes::TypeUnKnown && o2 != Node::semTypes::TypeUnKnown)
+//        semError("Несоответствие типов", l);
     return Node::semTypes::TypeUnKnown;
 }
 
-int TreeLL::semTypeResUn (int o1, Lexem* l)      //проверка результата унарной операции
+int TreeLL::semTypeResUn (int o1)      //проверка результата унарной операции
 {
     if (o1 == Node::semTypes::TypeInt || o1 == Node::semTypes::TypeLong)
         return o1;
-    if (o1 != Node::semTypes::TypeUnKnown)
-        semError("Несоответствие типов", l);
+//    if (o1 != Node::semTypes::TypeUnKnown)
+//        semError("Несоответствие типов", l);
     return Node::semTypes::TypeUnKnown;
 }
