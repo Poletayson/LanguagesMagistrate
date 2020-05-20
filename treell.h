@@ -43,7 +43,7 @@
 class TreeLL
 {
 public:
-    enum functions {startDecl = 201, setIdent, endDecl, setFunct, setNewLevel, returnLevel, endFunct, match, matchNumOnly, matchUn, find, findFunc, constType, push_t, matchLeft, startParam, setParam, stopParam, matchParamCount};   //семантические функции
+    enum functions {startDecl = 201, setIdent, endDecl, setFunct, setNewLevel, returnLevel, endFunct, match, matchNumOnly, matchUn, find, findFunc, constType, push_t, matchLeft, startParam, setParam, stopParam, matchParamCount, matchParamType};   //семантические функции
 
     Node *N;
     TreeLL *Parent, *Left, *Right;
@@ -60,8 +60,10 @@ public:
     TreeLL *Find (Node* n);   //поиск в таблице. Может вернуть null если нету
     TreeLL *FindOneLevel (TreeLL *From, Node* n);   //поиск в таблице. Может вернуть null если нету
     TreeLL *FindOneLevel (Node* n);   //поиск в таблице. Может вернуть null если нету
+    TreeLL *FindOneLevel (QString image);   //поиск в таблице. Может вернуть null если нету
     TreeLL *FindRightLeft (TreeLL *From, Node* n);   //поиск среди прямых потомков. Может вернуть null если нету
     TreeLL *FindRightLeft (Node* n);   //поиск среди прямых потомков. Может вернуть null если нету
+    TreeLL *FindRightLeftNum (TreeLL *From, int num);   //поиск среди прямых потомков узла с номером num. Может вернуть null если нету
     int semType (Lexem *lex);   //определение семантического типа
     bool idToTable (Node *n);  //проверка на дублирование, занесение идентификатора вместе с семантическим типом в таблицу
     bool semFToTable (QString name); //занесение имени функции вместе с типом возвращаемого значения в таблицу, создание пустой правой вершины. Возвращает указатель на созданную

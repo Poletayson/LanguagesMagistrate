@@ -89,7 +89,7 @@ LLAnalizator::LLAnalizator()
     Cell.append(new Lexem (NS, true));
     Cell.append(new Lexem (TreeLL::functions::endFunct, true));
     Cell.append(new Lexem (TreeLL::functions::returnLevel, true));
-    Cell.append(new Lexem (TreeLL::functions::returnLevel, true));
+//    Cell.append(new Lexem (TreeLL::functions::returnLevel, true));
     Cell.append(new Lexem (Trf, false));
     Cell.append(new Lexem (NBlock, true));
     Cell.append(new Lexem (TreeLL::functions::setNewLevel, true));
@@ -98,7 +98,7 @@ LLAnalizator::LLAnalizator()
     Cell.append(new Lexem (TreeLL::functions::stopParam, true));
     Cell.append(new Lexem (NSpPar, true));
     Cell.append(new Lexem (TreeLL::functions::startParam, true));
-    Cell.append(new Lexem (TreeLL::functions::setNewLevel, true));
+//    Cell.append(new Lexem (TreeLL::functions::setNewLevel, true));
     Cell.append(new Lexem (Tls, false));
     Cell.append(new Lexem (TreeLL::functions::setFunct, true));
     Cell.append(new Lexem (Tid, false));
@@ -109,14 +109,14 @@ LLAnalizator::LLAnalizator()
     Cell.append(new Lexem (NS, true));
     Cell.append(new Lexem (TreeLL::functions::endFunct, true));
     Cell.append(new Lexem (TreeLL::functions::returnLevel, true));
-    Cell.append(new Lexem (TreeLL::functions::returnLevel, true));
+//    Cell.append(new Lexem (TreeLL::functions::returnLevel, true));
     Cell.append(new Lexem (Trf, false));
     Cell.append(new Lexem (NBlock, true));
     Cell.append(new Lexem (TreeLL::functions::setNewLevel, true));
     Cell.append(new Lexem (Tlf, false));
     Cell.append(new Lexem (Trs, false));
     Cell.append(new Lexem (NSpPar, true));
-    Cell.append(new Lexem (TreeLL::functions::setNewLevel, true));
+//    Cell.append(new Lexem (TreeLL::functions::setNewLevel, true));
     Cell.append(new Lexem (Tls, false));
     Cell.append(new Lexem (Tmain, false));
     Cell.append(new Lexem (Tvoid, false));
@@ -128,8 +128,8 @@ LLAnalizator::LLAnalizator()
     Cell.append(new Lexem (TreeLL::functions::endDecl, true));
     Cell.append(new Lexem (Tdt, false));
     Cell.append(new Lexem (NSpIdent, true));
-    Cell.append(new Lexem (Tint, false));
     Cell.append(new Lexem (TreeLL::functions::startDecl, true));
+    Cell.append(new Lexem (Tint, false));
     Rules.clear();
     Rules.append(*new Rule (&Cell));
     Sting.insert(Tint, Rules);      //добавляем список правил в ячейку строки
@@ -139,8 +139,9 @@ LLAnalizator::LLAnalizator()
     Cell.append(new Lexem (TreeLL::functions::endDecl, true));
     Cell.append(new Lexem (Tdt, false));
     Cell.append(new Lexem (NSpIdent, true));  
-    Cell.append(new Lexem (Tchar, false));
     Cell.append(new Lexem (TreeLL::functions::startDecl, true));
+    Cell.append(new Lexem (Tchar, false));
+
     Rules.clear();
     Rules.append(*new Rule (&Cell));
     Sting.insert(Tchar, Rules);      //добавляем список правил в ячейку строки
@@ -151,9 +152,9 @@ LLAnalizator::LLAnalizator()
     Cell.append(new Lexem (Tdt, false));
     Cell.append(new Lexem (NSpIdent, true));
     Cell.append(new Lexem (Tint, false));
-    Cell.append(new Lexem (Tlong, false));
-    Cell.append(new Lexem (Tlong, false));
     Cell.append(new Lexem (TreeLL::functions::startDecl, true));
+    Cell.append(new Lexem (Tlong, false));
+    Cell.append(new Lexem (Tlong, false));
     Rules.clear();
     Rules.append(*new Rule (&Cell));
     Sting.insert(Tlong, Rules);      //добавляем список правил в ячейку строки
@@ -172,8 +173,8 @@ LLAnalizator::LLAnalizator()
     Cell.append(new Lexem (TreeLL::functions::endDecl, true));
     Cell.append(new Lexem (Tdt, false));
     Cell.append(new Lexem (NSpIdent, true));
-    Cell.append(new Lexem (Tint, false));
     Cell.append(new Lexem (TreeLL::functions::startDecl, true));
+    Cell.append(new Lexem (Tint, false));
     Rules.clear();
     Rules.append(*new Rule (&Cell));
     Sting.insert(Tint, Rules);      //добавляем список правил в ячейку строки
@@ -182,8 +183,8 @@ LLAnalizator::LLAnalizator()
     Cell.append(new Lexem (TreeLL::functions::endDecl, true));
     Cell.append(new Lexem (Tdt, false));
     Cell.append(new Lexem (NSpIdent, true));
-    Cell.append(new Lexem (Tchar, false));
     Cell.append(new Lexem (TreeLL::functions::startDecl, true));
+    Cell.append(new Lexem (Tchar, false));
     Rules.clear();
     Rules.append(*new Rule (&Cell));
     Sting.insert(Tchar, Rules);      //добавляем список правил в ячейку строки
@@ -193,9 +194,9 @@ LLAnalizator::LLAnalizator()
     Cell.append(new Lexem (Tdt, false));
     Cell.append(new Lexem (NSpIdent, true));
     Cell.append(new Lexem (Tint, false));
-    Cell.append(new Lexem (Tlong, false));
-    Cell.append(new Lexem (Tlong, false));
     Cell.append(new Lexem (TreeLL::functions::startDecl, true));
+    Cell.append(new Lexem (Tlong, false));
+    Cell.append(new Lexem (Tlong, false));
     Rules.clear();
     Rules.append(*new Rule (&Cell));
     Sting.insert(Tlong, Rules);      //добавляем список правил в ячейку строки
@@ -207,32 +208,35 @@ LLAnalizator::LLAnalizator()
 
     Cell.clear();   //int
     Cell.append(new Lexem (NB, true));
-    Cell.append(new Lexem (TreeLL::functions::setIdent, true));
+    Cell.append(new Lexem (TreeLL::functions::setParam, true));
     Cell.append(new Lexem (Tid, false)); 
-    Cell.append(new Lexem (Tint, false));
     Cell.append(new Lexem (TreeLL::functions::startDecl, true));
+    Cell.append(new Lexem (Tint, false));
+
     Rules.clear();
     Rules.append(*new Rule (&Cell));
     Sting.insert(Tint, Rules);      //добавляем список правил в ячейку строки
 
     Cell.clear();   //char
     Cell.append(new Lexem (NB, true));
-    Cell.append(new Lexem (TreeLL::functions::setIdent, true));
+    Cell.append(new Lexem (TreeLL::functions::setParam, true));
     Cell.append(new Lexem (Tid, false)); 
-    Cell.append(new Lexem (Tchar, false));
     Cell.append(new Lexem (TreeLL::functions::startDecl, true));
+    Cell.append(new Lexem (Tchar, false));
+
     Rules.clear();
     Rules.append(*new Rule (&Cell));
     Sting.insert(Tchar, Rules);      //добавляем список правил в ячейку строки
 
     Cell.clear();   //long
     Cell.append(new Lexem (NB, true));
-    Cell.append(new Lexem (TreeLL::functions::setIdent, true));
+    Cell.append(new Lexem (TreeLL::functions::setParam, true));
     Cell.append(new Lexem (Tid, false));    
     Cell.append(new Lexem (Tint, false));
-    Cell.append(new Lexem (Tlong, false));
-    Cell.append(new Lexem (Tlong, false));
     Cell.append(new Lexem (TreeLL::functions::startDecl, true));
+    Cell.append(new Lexem (Tlong, false));
+    Cell.append(new Lexem (Tlong, false));
+
     Rules.clear();
     Rules.append(*new Rule (&Cell));
     Sting.insert(Tlong, Rules);      //добавляем список правил в ячейку строки
@@ -268,30 +272,33 @@ LLAnalizator::LLAnalizator()
         Sting.clear();    //строка таблицы, соответствующая нетерминалу
 
         Cell.clear();   //int
-        Cell.append(new Lexem (TreeLL::functions::setIdent, true));
-        Cell.append(new Lexem (Tid, false));       
-        Cell.append(new Lexem (Tint, false));
+        Cell.append(new Lexem (TreeLL::functions::setParam, true));
+        Cell.append(new Lexem (Tid, false));
         Cell.append(new Lexem (TreeLL::functions::startDecl, true));
+        Cell.append(new Lexem (Tint, false));
+
         Rules.clear();
         Rules.append(*new Rule (&Cell));
         Sting.insert(Tint, Rules);      //добавляем список правил в ячейку строки
 
         Cell.clear();   //char
-        Cell.append(new Lexem (TreeLL::functions::setIdent, true));
-        Cell.append(new Lexem (Tid, false));      
-        Cell.append(new Lexem (Tchar, false));
+        Cell.append(new Lexem (TreeLL::functions::setParam, true));
+        Cell.append(new Lexem (Tid, false));
         Cell.append(new Lexem (TreeLL::functions::startDecl, true));
+        Cell.append(new Lexem (Tchar, false));
+
         Rules.clear();
         Rules.append(*new Rule (&Cell));
         Sting.insert(Tchar, Rules);      //добавляем список правил в ячейку строки
 
         Cell.clear();   //long
-        Cell.append(new Lexem (TreeLL::functions::setIdent, true));
+        Cell.append(new Lexem (TreeLL::functions::setParam, true));
         Cell.append(new Lexem (Tid, false));
         Cell.append(new Lexem (Tint, false));
-        Cell.append(new Lexem (Tlong, false));
-        Cell.append(new Lexem (Tlong, false));
         Cell.append(new Lexem (TreeLL::functions::startDecl, true));
+        Cell.append(new Lexem (Tlong, false));
+        Cell.append(new Lexem (Tlong, false));
+
         Rules.clear();
         Rules.append(*new Rule (&Cell));
         Sting.insert(Tlong, Rules);      //добавляем список правил в ячейку строки
@@ -511,6 +518,7 @@ LLAnalizator::LLAnalizator()
 
         Cell.clear();   //id
         //Cell.append(new Lexem (Tdt, false));
+        Cell.append(new Lexem (TreeLL::functions::matchLeft, true));
         Cell.append(new Lexem (NA1, true));
         Cell.append(new Lexem (Teq, false));
         Cell.append(new Lexem (TreeLL::functions::find, true));
@@ -860,8 +868,10 @@ LLAnalizator::LLAnalizator()
         Cell.clear();   //;
 
         Cell.append(new Lexem (Trs, false));
+        Cell.append(new Lexem (TreeLL::functions::matchParamCount, true));
         Cell.append(new Lexem (NSpID2, true));
         Cell.append(new Lexem (Tls, false));
+        Cell.append(new Lexem (TreeLL::functions::findFunc, true));
         Cell.append(new Lexem (Tid, false));
         Rules.clear();
         Rules.append(*new Rule (&Cell));
@@ -878,6 +888,7 @@ LLAnalizator::LLAnalizator()
         Rules.append(*new Rule (&Cell));
         Sting.insert(Tzap, Rules);      //добавляем список правил в ячейку строки
 
+        Cell.append(new Lexem (TreeLL::functions::matchParamType, true));
         Cell.append(new Lexem (NA1, true));
         Rules.clear();
         Rules.append(*new Rule (&Cell));
@@ -900,6 +911,7 @@ LLAnalizator::LLAnalizator()
 
         Cell.clear();   //;
         Cell.append(new Lexem (ND, true));
+        Cell.append(new Lexem (TreeLL::functions::matchParamType, true));
         Cell.append(new Lexem (NA1, true));
         Cell.append(new Lexem (Tzap, false));
         Rules.clear();
@@ -963,9 +975,7 @@ void LLAnalizator::toAnalize ()
                         case TreeLL::functions::setIdent:{
                             if(!setIdent()){
                                 isSemError = true;
-                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": повторное определение\n";
-//                                ErrorText = ErrorText + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": повторное определение\n";
-//                                T->semError("Повторное определение", &(*lex)[cur]);
+                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": повторное объявление переменной\n";
                             }
                             break;
                         }
@@ -1003,7 +1013,7 @@ void LLAnalizator::toAnalize ()
                             if (findFunc() == nullptr)    //Неопределенная функция
                             {
                                 isSemError = true;
-                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": вызов необъявленной  функции\n";
+                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": вызов неописанной  функции\n";
                             }
                             break;
                         }
@@ -1066,6 +1076,23 @@ void LLAnalizator::toAnalize ()
                             if(!matchParamCount()){
                                 isSemError = true;
                                 ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": несоответствие числа параметров\n";
+                            }
+                            break;
+                        }
+                        case TreeLL::functions::matchParamType:{
+                            paramCount++;
+                            TreeLL *curPar = T->FindRightLeftNum(findedFunc, paramCount); //ищем очередной параметр этой функции
+                            if (curPar == nullptr){
+                                isSemError = true;
+                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": несоответствие числа параметров\n";
+                                break;
+                            }
+                            types.push(curPar->N->TypeObj); //кладем типы формального и фактического параметров в стек
+//                            types.push(T->semType(&(*lex)[cur - 1]));
+                            //проверяем соответствие
+                            if (match() == Node::semTypes::TypeUnKnown){
+                                isSemError = true;
+                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": несоответствие типов формального и фактического параметров " + findedFunc->N->Id + " " + QString::number(findedFunc->N->ParamCount) + " " + QString::number(paramCount) + "\n";
                             }
                             break;
                         }
@@ -1180,7 +1207,7 @@ void LLAnalizator::startDecl()
     isDecl = true;
     //определяем семантический тип
     int type = Node::semTypes::TypeUnKnown;
-    switch ((*lex)[cur].type) {
+    switch ((*lex)[cur - 1].type) {
         case Tint:{
             type = Node::semTypes::TypeInt;
             break;

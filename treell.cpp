@@ -85,8 +85,26 @@ void TreeLL::addRight (Node *n)
 
  TreeLL *TreeLL::FindOneLevel (Node* n)
 {
-    return FindOneLevel (this, n);
-}
+     return FindOneLevel (this, n);
+ }
+
+ TreeLL *TreeLL::FindOneLevel(QString image)
+ {
+     TreeLL *cur = this;
+     while (cur != nullptr)               //пока не дошли до конца или до пустой вершины
+         if (cur->Parent != nullptr)
+             if (cur->Parent->Right == cur)      //правый потомок
+                 break;
+             else
+                  if (image != cur->N->Id)    //объект таблицы не совпадает с заданным
+                     cur = cur->Parent;
+                  else break;
+         else cur = cur->Parent;
+     if (cur != nullptr)
+         if (image != cur->N->Id)
+             cur = nullptr;
+     return cur;
+ }
 
 
  TreeLL *TreeLL::FindRightLeft (TreeLL *From, Node* n)        //ищем в правом ряду
@@ -101,8 +119,18 @@ void TreeLL::addRight (Node *n)
 
  TreeLL *TreeLL::FindRightLeft (Node* n)
 {
-    return FindRightLeft (this, n);
-}
+     return FindRightLeft (this, n);
+ }
+
+ TreeLL *TreeLL::FindRightLeftNum(TreeLL *From, int num)
+ {
+     TreeLL *cur = From->Right;
+     while (cur != nullptr && num > 0){
+             cur = cur->Left;
+             num--;
+     }
+     return cur;
+ }
 
  int TreeLL::semType(Lexem *lex)      //семантический тип лексемы
 {
@@ -152,7 +180,7 @@ void TreeLL::addRight (Node *n)
 
  bool TreeLL::idToTable (Node *n)  //проверка на дублирование, занесение идентификатора вместе с семантическим типом в таблицу
  {
-    if (!Cur->FindOneLevel(n))  //узла еще нет
+    if (!Cur->FindOneLevel(n->Id))  //узла еще нет
     {
         Cur->addLeft(n);
         Cur = Cur->Left;
