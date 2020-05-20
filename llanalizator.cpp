@@ -95,7 +95,9 @@ LLAnalizator::LLAnalizator()
     Cell.append(new Lexem (TreeLL::functions::setNewLevel, true));
     Cell.append(new Lexem (Tlf, false));
     Cell.append(new Lexem (Trs, false));
+    Cell.append(new Lexem (TreeLL::functions::stopParam, true));
     Cell.append(new Lexem (NSpPar, true));
+    Cell.append(new Lexem (TreeLL::functions::startParam, true));
     Cell.append(new Lexem (TreeLL::functions::setNewLevel, true));
     Cell.append(new Lexem (Tls, false));
     Cell.append(new Lexem (TreeLL::functions::setFunct, true));
@@ -996,6 +998,15 @@ void LLAnalizator::toAnalize ()
                             }
                             break;
                         }
+
+                        case TreeLL::functions::findFunc:{
+                            if (findFunc() == nullptr)    //Неопределенная функция
+                            {
+                                isSemError = true;
+                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": вызов необъявленной  функции\n";
+                            }
+                            break;
+                        }
                         case TreeLL::functions::constType:{
                             int t = constType();
                             if (t != Node::semTypes::TypeInt && t != Node::semTypes::TypeChar && t != Node::semTypes::TypeLong){
@@ -1036,7 +1047,28 @@ void LLAnalizator::toAnalize ()
                             }
                             break;
                         }
-
+                        case TreeLL::functions::startParam:{
+                            paramCount = 0; //обнуляем счетчик параметров
+                            break;
+                        }
+                        case TreeLL::functions::setParam:{
+                            if(!setParam()){
+                                isSemError = true;
+                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": повторное определение параметра\n";
+                            }
+                            break;
+                        }
+                        case TreeLL::functions::stopParam:{
+                            T->funcSetParamCount(paramCount);
+                            break;
+                        }
+                        case TreeLL::functions::matchParamCount:{
+                            if(!matchParamCount()){
+                                isSemError = true;
+                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": несоответствие числа параметров\n";
+                            }
+                            break;
+                        }
                     }
                 }
                 //просто НТ
@@ -1171,6 +1203,14 @@ bool LLAnalizator::setIdent()
     return T->idToTable(new Node ((*lex)[cur - 1].image, type1));   //проверяем на дублирование и заносим с определенным ранее семантическим типом
 }
 
+bool LLAnalizator::setParam()
+{
+    bool result = T->idToTable(new Node ((*lex)[cur - 1].image, type1));   //проверяем на дублирование и заносим с определенным ранее семантическим типом
+    if (result)
+        paramCount++;   //увеличиваем счетчик в случае успеха
+    return result;
+}
+
 void LLAnalizator::endDecl()
 {
     isDecl = false;
@@ -1194,6 +1234,14 @@ bool LLAnalizator::setFunct()
 TreeLL* LLAnalizator::findId()
 {
     return  T->Cur->Find((*lex)[cur - 1].image);     //ищем идентификатор
+}
+
+TreeLL *LLAnalizator::findFunc()
+{
+    TreeLL *ptr = T->Cur->Find(new Node ((*lex)[cur - 1].image, Node::semTypes::TypeFunc));     //ищем функцию
+    findedFunc = ptr;
+    paramCount = 0; //обнуляем число параметров
+    return ptr;
 }
 
 int LLAnalizator::constType()
@@ -1224,4 +1272,9 @@ int LLAnalizator::matchUn()
 {
     types.push(T->semTypeResUn(types.pop()));
     return types.last();
+}
+
+bool LLAnalizator::matchParamCount()
+{
+    return findedFunc->N->ParamCount == paramCount;
 }

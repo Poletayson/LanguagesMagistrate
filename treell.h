@@ -43,7 +43,7 @@
 class TreeLL
 {
 public:
-    enum functions {startDecl = 201, setIdent, endDecl, setFunct, setNewLevel, returnLevel, endFunct, match, matchNumOnly, matchUn, find, constType, push_t, matchLeft};   //семантические функции
+    enum functions {startDecl = 201, setIdent, endDecl, setFunct, setNewLevel, returnLevel, endFunct, match, matchNumOnly, matchUn, find, findFunc, constType, push_t, matchLeft, startParam, setParam, stopParam, matchParamCount};   //семантические функции
 
     Node *N;
     TreeLL *Parent, *Left, *Right;
@@ -76,6 +76,8 @@ public:
     int semTypeRes (int o1, int o2);      //проверка результата операции
     int semTypeResOnlyNum (int o1, int o2);      //проверка результата для ТОЛЬКО числовых операций
     int semTypeResUn (int o1);      //проверка результата для унарных операций
+
+    void funcSetParamCount(int count);  //установить число параметров для текущей описываемой функции
 };
 
 #endif // TREELL_H

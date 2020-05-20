@@ -89,7 +89,7 @@ void Analizator::S ()
                     if ((*lex)[cur].type != Tls)
                     {
                         right = false;
-                        ErrorText = "Ожидался символ )";
+                        ErrorText = "Ожидался символ (";
                         break;
                     }
                     cur++;

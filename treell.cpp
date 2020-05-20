@@ -256,3 +256,8 @@ int TreeLL::semTypeResUn (int o1)      //проверка результата �
 //        semError("Несоответствие типов", l);
     return Node::semTypes::TypeUnKnown;
 }
+
+void TreeLL::funcSetParamCount(int count)
+{
+     F->N->ParamCount = count;
+}
