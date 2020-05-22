@@ -32,7 +32,8 @@ SOURCES += \
     tree.cpp \
     treell.cpp \
     llanalizator.cpp \
-    rule.cpp
+    rule.cpp \
+    triad.cpp
 
 
 # Default rules for deployment.
@@ -49,5 +50,6 @@ HEADERS += \
     tree.h \
     treell.h \
     llanalizator.h \
-    rule.h
+    rule.h \
+    triad.h
 

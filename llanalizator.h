@@ -35,6 +35,7 @@
 
 
 #include "treell.h"
+#include "triad.h"
 #include <iostream>
 #include <QTextStream>
 #include <qdebug.h>
@@ -66,7 +67,8 @@ public:
     bool isDecl = false;
     int type1;
     int type2;
-    QStack <int> types;
+    QStack <int> types; //стек типов
+    QStack <Operand> operands;  //стек операндов
 
 
     Scanner *scaner;
@@ -78,6 +80,9 @@ public:
 private:
     int paramCount; //счетчик параметров функции
     TreeLL *findedFunc;
+
+    QList <Triad*> triads;  //список сгенерированных триад
+    Operand *result;   // очередной результат
 
     /**
      * @brief установить флаг описания данных и запомнить тип в глобальной  переменной dataType
@@ -128,6 +133,12 @@ private:
      * @return приведенный тип
      */
     int match ();
+
+    int matchPlus ();
+    int matchMinus ();
+    int matchMul ();
+    int matchDiv ();
+    int matchMod ();
     /**
      * @brief
      * @return приведенный тип

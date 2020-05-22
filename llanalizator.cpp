@@ -1286,6 +1286,11 @@ int LLAnalizator::match()
     return types.last();
 }
 
+int LLAnalizator::matchPlus()
+{
+
+}
+
 int LLAnalizator::matchNumOnly()
 {
     //берем верхние типы, проверяем и кладем результат
