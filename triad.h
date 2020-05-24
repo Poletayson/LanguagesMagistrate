@@ -12,22 +12,26 @@ struct Operand {
 public:
     Operand(int triadNum);  //операнд - ссылка на триаду
     Operand(Node *operand); //непосредственный операнд
+    int getType (); //получить тип, либо непосредственного операнда, либо триады
   };
 
 class Triad
 {
+public:
     int operation;  //операция
     Operand *operand1, *operand2;
 
-    int resType;    //тип результата триады
+    int type;    //тип результата триады
 
-public:
+
     enum operations {CtoI, ItoL, plus, minus, mul, div, mod, eq};
 
     Triad();
     Triad(int operation, Operand *op1, Operand *op2);
-    int getResType() const;
-    void setResType(int value);
+    int getType() const;
+    void setType(int value);
+    int getOperation() const;
+    void setOperation(int value);
 };
 
 #endif // TRIAD_H

@@ -1,14 +1,24 @@
 #include "triad.h"
 
 
-int Triad::getResType() const
+int Triad::getType() const
 {
-    return resType;
+    return type;
 }
 
-void Triad::setResType(int value)
+void Triad::setType(int value)
 {
-    resType = value;
+    type = value;
+}
+
+int Triad::getOperation() const
+{
+    return operation;
+}
+
+void Triad::setOperation(int value)
+{
+    operation = value;
 }
 
 Triad::Triad()
@@ -33,4 +43,9 @@ Operand::Operand(Node *operand)
 {
     node = operand;
     isLink = false; //непосредственный операнд
+}
+
+int Operand::getType()
+{
+    return node->TypeObj;
 }

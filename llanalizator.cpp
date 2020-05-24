@@ -78,7 +78,11 @@ LLAnalizator::LLAnalizator()
     NTerminalsNames.insert(NSpID2, "Список выражений");
     NTerminalsNames.insert(ND, "D");
 
-
+    operationsDesignation.insert(TreeLL::functions::matchPlus, "+");
+    operationsDesignation.insert(TreeLL::functions::matchMinus, "-");
+    operationsDesignation.insert(TreeLL::functions::matchMul, "*");
+    operationsDesignation.insert(TreeLL::functions::matchDiv, "/");
+    operationsDesignation.insert(TreeLL::functions::matchMod, "%");
 
 
  //заполняем управляющую таблицу
@@ -352,6 +356,7 @@ LLAnalizator::LLAnalizator()
         Sting.insert(Tzap, Rules);      //добавляем список правил в ячейку строки
 
         Cell.clear();   //id
+        Cell.append(new Lexem (TreeLL::functions::matchLeft, true));
         Cell.append(new Lexem (NA1, true));
         Cell.append(new Lexem (Teq, false));
         Rules.clear();
@@ -598,7 +603,7 @@ LLAnalizator::LLAnalizator()
 
         Cell.clear();   //;
         Cell.append(new Lexem (NA11, true));
-        Cell.append(new Lexem (TreeLL::functions::match, true));
+        Cell.append(new Lexem (TreeLL::functions::matchOr, true));
         Cell.append(new Lexem (NA2, true));
         Cell.append(new Lexem (Tvch, false));
         Rules.clear();
@@ -636,7 +641,7 @@ LLAnalizator::LLAnalizator()
 
         Cell.clear();   //;
         Cell.append(new Lexem (NA21, true));
-        Cell.append(new Lexem (TreeLL::functions::match, true));
+        Cell.append(new Lexem (TreeLL::functions::matchAnd, true));
         Cell.append(new Lexem (NA3, true));
         Cell.append(new Lexem (Tamp, false));
         Rules.clear();
@@ -675,7 +680,7 @@ LLAnalizator::LLAnalizator()
 
         Cell.clear();   //;
         Cell.append(new Lexem (NA31, true));
-        Cell.append(new Lexem (TreeLL::functions::match, true));
+        Cell.append(new Lexem (TreeLL::functions::matchLSd, true));
         Cell.append(new Lexem (NA4, true));
         Cell.append(new Lexem (Tlsd, false));
         Cell.append(new Lexem (Tlsd, false));
@@ -685,7 +690,7 @@ LLAnalizator::LLAnalizator()
 
         Cell.clear();   //;
         Cell.append(new Lexem (NA31, true));
-        Cell.append(new Lexem (TreeLL::functions::match, true));
+        Cell.append(new Lexem (TreeLL::functions::matchRSd, true));
         Cell.append(new Lexem (NA4, true));
         Cell.append(new Lexem (Trsd, false));
         Cell.append(new Lexem (Trsd, false));
@@ -726,7 +731,7 @@ LLAnalizator::LLAnalizator()
 
         Cell.clear();   //;
         Cell.append(new Lexem (NA41, true));
-        Cell.append(new Lexem (TreeLL::functions::match, true));
+        Cell.append(new Lexem (TreeLL::functions::matchPlus, true));
         Cell.append(new Lexem (NA5, true));
         Cell.append(new Lexem (Tplus, false));
         Rules.clear();
@@ -734,7 +739,7 @@ LLAnalizator::LLAnalizator()
         Sting.insert(Tplus, Rules);      //добавляем список правил в ячейку строки
         Cell.clear();   //;
         Cell.append(new Lexem (NA41, true));
-        Cell.append(new Lexem (TreeLL::functions::match, true));
+        Cell.append(new Lexem (TreeLL::functions::matchMinus, true));
         Cell.append(new Lexem (NA5, true));
         Cell.append(new Lexem (Tminus, false));
         Rules.clear();
@@ -776,7 +781,7 @@ LLAnalizator::LLAnalizator()
 
         Cell.clear();   //;
         Cell.append(new Lexem (NA51, true));
-        Cell.append(new Lexem (TreeLL::functions::match, true));
+        Cell.append(new Lexem (TreeLL::functions::matchMul, true));
         Cell.append(new Lexem (NA6, true));
         Cell.append(new Lexem (Tmul, false));
         Rules.clear();
@@ -784,7 +789,7 @@ LLAnalizator::LLAnalizator()
         Sting.insert(Tmul, Rules);      //добавляем список правил в ячейку строки
         Cell.clear();   //;
         Cell.append(new Lexem (NA51, true));
-        Cell.append(new Lexem (TreeLL::functions::match, true));
+        Cell.append(new Lexem (TreeLL::functions::matchDiv, true));
         Cell.append(new Lexem (NA6, true));
         Cell.append(new Lexem (Tdel, false));
         Rules.clear();
@@ -792,7 +797,7 @@ LLAnalizator::LLAnalizator()
         Sting.insert(Tdel, Rules);      //добавляем список правил в ячейку строки
         Cell.clear();   //;
         Cell.append(new Lexem (NA51, true));
-        Cell.append(new Lexem (TreeLL::functions::match, true));
+        Cell.append(new Lexem (TreeLL::functions::matchMod, true));
         Cell.append(new Lexem (NA6, true));
         Cell.append(new Lexem (Tpers, false));
         Rules.clear();
@@ -1003,8 +1008,8 @@ void LLAnalizator::toAnalize ()
                                 ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": необъявленная  переменная\n";
                             }
                             else {
-                                type1 = id->N->TypeObj; //тип
-                                types.push(id->N->TypeObj); //кладем тип в стек
+//                                type1 = id->N->TypeObj; //тип
+                                //types.push(id->N->TypeObj); //кладем тип в стек
                             }
                             break;
                         }
@@ -1030,31 +1035,100 @@ void LLAnalizator::toAnalize ()
                             break;
                         }
                         case TreeLL::functions::match:{
-                            if (match() == Node::semTypes::TypeUnKnown){
-                                isSemError = true;
-                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": несоответствие типов\n";
-                            }
+//                            if (match() == Node::semTypes::TypeUnKnown){
+//                                isSemError = true;
+//                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": несоответствие типов\n";
+//                            }
                             break;
                         }
+
+
+                        case TreeLL::functions::matchOr:{
+                                if (match(TreeLL::functions::matchOr) == Node::semTypes::TypeUnKnown){
+                                    isSemError = true;
+                                    ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": неверный тип\n";
+                                }
+                            break;
+                        }
+                        case TreeLL::functions::matchAnd:{
+                                if (match(TreeLL::functions::matchAnd) == Node::semTypes::TypeUnKnown){
+                                    isSemError = true;
+                                    ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": неверный тип\n";
+                                }
+                            break;
+                        }
+                        case TreeLL::functions::matchLSd:{
+                                if (match(TreeLL::functions::matchLSd) == Node::semTypes::TypeUnKnown){
+                                    isSemError = true;
+                                    ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": неверный тип\n";
+                                }
+                            break;
+                        }
+                        case TreeLL::functions::matchRSd:{
+                                if (match(TreeLL::functions::matchRSd) == Node::semTypes::TypeUnKnown){
+                                    isSemError = true;
+                                    ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": неверный тип\n";
+                                }
+                            break;
+                        }
+                        case TreeLL::functions::matchPlus:{
+                                if (match(TreeLL::functions::matchPlus) == Node::semTypes::TypeUnKnown){
+                                    isSemError = true;
+                                    ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": неверный тип\n";
+                                }
+                            break;
+                        }
+                        case TreeLL::functions::matchMinus:{
+                                if (match(TreeLL::functions::matchMinus) == Node::semTypes::TypeUnKnown){
+                                    isSemError = true;
+                                    ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": неверный тип\n";
+                                }
+                            break;
+                        }
+
+                        case TreeLL::functions::matchMul:{
+                                if (matchNumOnly(TreeLL::functions::matchMul) == Node::semTypes::TypeUnKnown){
+                                    isSemError = true;
+                                    ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": неверный тип\n";
+                                }
+                            break;
+                        }
+                        case TreeLL::functions::matchDiv:{
+                                if (matchNumOnly(TreeLL::functions::matchDiv) == Node::semTypes::TypeUnKnown){
+                                    isSemError = true;
+                                    ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": неверный тип\n";
+                                }
+                            break;
+                        }
+                        case TreeLL::functions::matchMod:{
+                                if (matchNumOnly(TreeLL::functions::matchMod) == Node::semTypes::TypeUnKnown){
+                                    isSemError = true;
+                                    ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": неверный тип\n";
+                                }
+                            break;
+                        }
+                    case TreeLL::functions::matchUn:{
+                        if (matchUn(TreeLL::functions::matchTil) == Node::semTypes::TypeUnKnown){
+                            isSemError = true;
+                            ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": несоответствие типов\n";
+                        }
+                        break;
+                    }
+
+
                         case TreeLL::functions::matchNumOnly:{
-                            if (matchNumOnly() == Node::semTypes::TypeUnKnown){
-                                isSemError = true;
-                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": несоответствие типов\n";
-                            }
+//                            if (matchNumOnly() == Node::semTypes::TypeUnKnown){
+//                                isSemError = true;
+//                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": несоответствие типов\n";
+//                            }
                             break;
                         }
-                        case TreeLL::functions::matchUn:{
-                            if (matchUn() == Node::semTypes::TypeUnKnown){
-                                isSemError = true;
-                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": несоответствие типов\n";
-                            }
-                            break;
-                        }
+
                         case TreeLL::functions::matchLeft:{
-                            if (match() == Node::semTypes::TypeUnKnown){
-                                isSemError = true;
-                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": несоответствие типов\n";
-                            }
+//                            if (match() == Node::semTypes::TypeUnKnown){
+//                                isSemError = true;
+//                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": несоответствие типов\n";
+//                            }
                             break;
                         }
                         case TreeLL::functions::startParam:{
@@ -1087,13 +1161,14 @@ void LLAnalizator::toAnalize ()
                                 ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": несоответствие числа параметров\n";
                                 break;
                             }
-                            types.push(curPar->N->TypeObj); //кладем типы формального и фактического параметров в стек
+                            //types.push(curPar->N->TypeObj); //кладем типы формального и фактического параметров в стек
+
 //                            types.push(T->semType(&(*lex)[cur - 1]));
                             //проверяем соответствие
-                            if (match() == Node::semTypes::TypeUnKnown){
-                                isSemError = true;
-                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": несоответствие типов формального и фактического параметров " + findedFunc->N->Id + " " + QString::number(findedFunc->N->ParamCount) + " " + QString::number(paramCount) + "\n";
-                            }
+//                            if (match() == Node::semTypes::TypeUnKnown){
+//                                isSemError = true;
+//                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": несоответствие типов формального и фактического параметров " + findedFunc->N->Id + " " + QString::number(findedFunc->N->ParamCount) + " " + QString::number(paramCount) + "\n";
+//                            }
                             break;
                         }
                     }
@@ -1185,10 +1260,32 @@ void LLAnalizator::toAnalize ()
     outStream << QString("\n");
     outStream.flush();
 
-    if (!isError && !isSemError)
-        //if ((*lex)[cur].type == Tend)
-        outStream<<QString("\n Ошибок не обнаружено\n");
-        //else;
+    if (!isError && !isSemError){
+        outStream<<QString("\n Ошибок не обнаружено\n\n");
+
+        int i = 1;
+        //выводим все триады
+        foreach (Triad* t, triads) {
+            QString txt1, txt2;
+            Operand *op1 = t->operand1;
+            if (op1->isLink){
+                txt1 = QString ("(") + QString::number(op1->number) + QString (")");
+            } else {
+                txt1 = op1->node->Id;
+            }
+
+            Operand *op2 = t->operand2;
+            if (op2->isLink){
+                txt2 = QString ("(") + QString::number(op2->number + 1) + QString (")");
+            } else {
+                txt2 = op2->node->Id;
+            }
+
+
+           outStream<<QString::number(i)<< ") " << operationsDesignation.value(t->getOperation()) << QString("  ") << txt1 << QString("  ") << txt2 << QString("\n");
+           i++;
+        }
+    }
     else
     {   if (isError)
             outStream<< ErrorText;
@@ -1260,7 +1357,19 @@ bool LLAnalizator::setFunct()
 
 TreeLL* LLAnalizator::findId()
 {
-    return  T->Cur->Find((*lex)[cur - 1].image);     //ищем идентификатор
+    TreeLL* id = T->Cur->Find((*lex)[cur - 1].image);     //ищем идентификатор
+    if (id == nullptr)    //Необъявленная  переменная
+    {
+        isSemError = true;
+        ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": необъявленная  переменная\n";
+    }
+    else {
+        int type = id->N->TypeObj;    //определяем тип
+        QString im = id->N->Id;
+        operands.push(new Operand (new Node(im, type)));    //заносим как новый операнд!
+    }
+
+    return id;
 }
 
 TreeLL *LLAnalizator::findFunc()
@@ -1273,37 +1382,88 @@ TreeLL *LLAnalizator::findFunc()
 
 int LLAnalizator::constType()
 {
-    types.push(T->semType(&(*lex)[cur - 1]));   //определяем тип
-    return types.last();
+    int type = T->semType(&(*lex)[cur - 1]);    //определяем тип
+    QString im = (*lex)[cur - 1].image;
+    operands.push(new Operand (new Node(im, type)));    //заносим как новый операнд!
+    return type;
 }
 
-int LLAnalizator::match()
+int LLAnalizator::match(int operation)
 {
-    //берем верхние типы, проверяем и кладем результат
-    int t2 = types.pop();
-    int t1 = types.pop();
-    types.push(T->semTypeRes(t1, t2));
-    return types.last();
+    //берем верхние типы
+    int t1, t2;
+
+    Operand *op2 = operands.pop();
+    if (op2->isLink){
+        t2 = triads[op2->number]->getType(); //получаем тип из той триады, которая указана в номере в операнде
+    } else {
+        t2 = op2->getType();
+    }
+
+    Operand *op1 = operands.pop();
+    if (op1->isLink){
+        t1 = triads[op1->number]->getType(); //получаем тип из той триады, которая указана в номере в операнде
+    } else {
+        t1 = op1->getType();
+    }
+
+    Triad *t = new Triad(operation, op1, op2);  //формируем триаду
+    t->setType(T->semTypeRes(t1, t2));  //определяем тип
+    triads.push_back(t);
+
+    operands.push(new Operand(triads.count() - 1)); //новый операнд - триада
+
+    return t->getType();    //возвращаем тип результата
 }
 
-int LLAnalizator::matchPlus()
-{
 
+int LLAnalizator::matchNumOnly(int operation)
+{
+    //берем верхние типы
+    int t1, t2;
+
+    Operand *op2 = operands.pop();
+    if (op2->isLink){
+        t2 = triads[op2->number]->getType(); //получаем тип из той триады, которая указана в номере в операнде
+    } else {
+        t2 = op2->getType();
+    }
+
+    Operand *op1 = operands.pop();
+    if (op1->isLink){
+        t1 = triads[op1->number]->getType(); //получаем тип из той триады, которая указана в номере в операнде
+    } else {
+        t1 = op1->getType();
+    }
+
+    Triad *t = new Triad(operation, op1, op2);  //формируем триаду
+    t->setType(T->semTypeResOnlyNum(t1, t2));  //определяем тип
+    triads.push_back(t);
+
+    operands.push(new Operand(triads.count() - 1)); //новый операнд - триада
+
+    return t->getType();    //возвращаем тип результата
 }
 
-int LLAnalizator::matchNumOnly()
+int LLAnalizator::matchUn(int operation)
 {
-    //берем верхние типы, проверяем и кладем результат
-    int t2 = types.pop();
-    int t1 = types.pop();
-    types.push(T->semTypeResOnlyNum(t1, t2));
-    return types.last();
-}
+    //берем верхний тип
+    int t;
 
-int LLAnalizator::matchUn()
-{
-    types.push(T->semTypeResUn(types.pop()));
-    return types.last();
+    Operand *op = operands.pop();
+    if (op->isLink){
+        t = triads[op->number]->getType(); //получаем тип из той триады, которая указана в номере в операнде
+    } else {
+        t = op->getType();
+    }
+
+    Triad *tr = new Triad(operation, op, op);  //формируем триаду
+    tr->setType(T->semTypeResUn(t));  //определяем тип
+    triads.push_back(tr);
+
+    operands.push(new Operand(triads.count() - 1)); //новый операнд - триада
+
+    return tr->getType();    //возвращаем тип результата
 }
 
 bool LLAnalizator::matchParamCount()

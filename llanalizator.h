@@ -52,6 +52,8 @@ public:
     QStack <Lexem> Stack;
     QMultiMap <int, QMultiMap <int, QList<Rule>>> Table;
     QMultiMap <int, QString> NTerminalsNames;
+
+    QMultiMap <int, QString> operationsDesignation; //обозначение операций
     LLAnalizator();
     void toAnalize ();
 
@@ -67,8 +69,8 @@ public:
     bool isDecl = false;
     int type1;
     int type2;
-    QStack <int> types; //стек типов
-    QStack <Operand> operands;  //стек операндов
+    //QStack <int> types; //стек типов
+    QStack <Operand*> operands;  //стек операндов
 
 
     Scanner *scaner;
@@ -132,23 +134,27 @@ private:
      * @brief
      * @return приведенный тип
      */
-    int match ();
+    int match (int operation);
 
     int matchPlus ();
     int matchMinus ();
     int matchMul ();
     int matchDiv ();
     int matchMod ();
+    int matchOr ();
+    int matchAnd ();
+    int matchLSd ();
+    int matchRSd ();
     /**
      * @brief
      * @return приведенный тип
      */
-    int matchNumOnly ();
+    int matchNumOnly (int operation);
     /**
      * @brief
      * @return приведенный тип
      */
-    int matchUn ();
+    int matchUn (int operation);
 
     bool matchParamCount ();
 };
