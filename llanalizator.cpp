@@ -85,7 +85,15 @@ LLAnalizator::LLAnalizator()
     operationsDesignation.insert(TreeLL::functions::matchMod, "%");
 
     operationsDesignation.insert(TreeLL::functions::matchLeft, "=");
-    operationsDesignation.insert(TreeLL::functions::pushParam, "Push");
+    operationsDesignation.insert(TreeLL::functions::pushParam, "push");
+    operationsDesignation.insert(TreeLL::functions::call, "call");
+
+    operationsDesignation.insert(TreeLL::functions::proc, "proc");
+    operationsDesignation.insert(TreeLL::functions::prolog, "prolog");
+    operationsDesignation.insert(TreeLL::functions::epilog, "epilog");
+    operationsDesignation.insert(TreeLL::functions::ret, "ret");
+    operationsDesignation.insert(TreeLL::functions::endp, "endp");
+
 
 
 
@@ -95,6 +103,9 @@ LLAnalizator::LLAnalizator()
     QMultiMap <int, QList<Rule>> Sting;    //строка таблицы, соответствующая нетерминалу
 //нетерминал S
     Cell.append(new Lexem (NS, true));
+    Cell.append(new Lexem (TreeLL::functions::endp, true));
+    Cell.append(new Lexem (TreeLL::functions::ret, true));
+    Cell.append(new Lexem (TreeLL::functions::epilog, true));
     Cell.append(new Lexem (TreeLL::functions::endFunct, true));
     Cell.append(new Lexem (TreeLL::functions::returnLevel, true));
 //    Cell.append(new Lexem (TreeLL::functions::returnLevel, true));
@@ -108,6 +119,8 @@ LLAnalizator::LLAnalizator()
     Cell.append(new Lexem (TreeLL::functions::startParam, true));
 //    Cell.append(new Lexem (TreeLL::functions::setNewLevel, true));
     Cell.append(new Lexem (Tls, false));
+    Cell.append(new Lexem (TreeLL::functions::prolog, true));
+    Cell.append(new Lexem (TreeLL::functions::proc, true));
     Cell.append(new Lexem (TreeLL::functions::setFunct, true));
     Cell.append(new Lexem (Tid, false));
     Cell.append(new Lexem (Tvoid, false));
@@ -876,6 +889,7 @@ LLAnalizator::LLAnalizator()
 
         Cell.clear();   //;
 
+        Cell.append(new Lexem (TreeLL::functions::call, true));
         Cell.append(new Lexem (Trs, false));
         Cell.append(new Lexem (TreeLL::functions::matchParamCount, true));
         Cell.append(new Lexem (NSpID2, true));
@@ -1003,6 +1017,9 @@ void LLAnalizator::toAnalize ()
                             {
                                 isSemError = true;
                                 ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": повторное определение функции\n";
+                            }
+                            else {
+                                findedFunc = findFunc();    //ставили, теперь ищем
                             }
                             break;
                         }
@@ -1160,8 +1177,39 @@ void LLAnalizator::toAnalize ()
                             }
                             break;
                         }
-                        case TreeLL::functions::pushParam:{
-
+                        case TreeLL::functions::call:{
+                            Triad *tr = new Triad(TreeLL::functions::call, new Operand (findedFunc->N), nullptr);  //формируем триаду вызова функции
+                            triads.push_back(tr);
+                            break;
+                        }
+                        case TreeLL::functions::proc:{
+                            Triad *tr = new Triad(TreeLL::functions::proc, new Operand (findedFunc->N), nullptr);  //формируем триаду
+                            tr->setType(TreeLL::functions::proc);  //определяем тип
+                            triads.push_back(tr);
+                            break;
+                        }
+                        case TreeLL::functions::prolog:{
+                            Triad *tr = new Triad(TreeLL::functions::prolog, nullptr, nullptr);  //формируем триаду
+                            tr->setType(TreeLL::functions::prolog);  //определяем тип
+                            triads.push_back(tr);
+                            break;
+                        }
+                        case TreeLL::functions::epilog:{
+                            Triad *tr = new Triad(TreeLL::functions::epilog, nullptr, nullptr);  //формируем триаду
+                            tr->setType(TreeLL::functions::epilog);  //определяем тип
+                            triads.push_back(tr);
+                            break;
+                        }
+                        case TreeLL::functions::ret:{
+                            Triad *tr = new Triad(TreeLL::functions::ret, nullptr, nullptr);  //формируем триаду
+                            tr->setType(TreeLL::functions::ret);  //определяем тип
+                            triads.push_back(tr);
+                            break;
+                        }
+                        case TreeLL::functions::endp:{
+                            Triad *tr = new Triad(TreeLL::functions::endp, nullptr, nullptr);  //формируем триаду
+                            tr->setType(TreeLL::functions::endp);  //определяем тип
+                            triads.push_back(tr);
                             break;
                         }
                         case TreeLL::functions::matchParamType:{
