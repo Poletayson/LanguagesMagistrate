@@ -176,7 +176,53 @@ void TreeLL::addRight (Node *n)
          default:
              return Node::semTypes::TypeUnKnown;
      }
-}
+ }
+
+ int TreeLL::semType(int type)
+ {
+     switch (type)
+
+     {
+        case Tint:
+         {
+            return Node::semTypes::TypeInt;
+         }
+         case Tint8:
+          {
+             return Node::semTypes::TypeInt;
+          }
+         case Tint10:
+          {
+             return Node::semTypes::TypeInt;
+          }
+         case Tint16:
+          {
+             return Node::semTypes::TypeInt;
+          }
+         case Tchar:
+          {
+             return Node::semTypes::TypeChar;
+          }
+         case Tcchar:
+          {
+             return Node::semTypes::TypeChar;
+          }
+         case Tlong:
+          {
+             return Node::semTypes::TypeLong;
+          }
+         case Tmain:
+          {
+             return Node::semTypes::TypeMain;
+          }
+         case Tvoid:
+          {
+             return Node::semTypes::TypeVoid;
+          }
+         default:
+             return Node::semTypes::TypeUnKnown;
+     }
+ }
 
  bool TreeLL::idToTable (Node *n)  //проверка на дублирование, занесение идентификатора вместе с семантическим типом в таблицу
  {

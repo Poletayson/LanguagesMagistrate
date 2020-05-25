@@ -84,6 +84,10 @@ LLAnalizator::LLAnalizator()
     operationsDesignation.insert(TreeLL::functions::matchDiv, "/");
     operationsDesignation.insert(TreeLL::functions::matchMod, "%");
 
+    operationsDesignation.insert(TreeLL::functions::matchLeft, "=");
+    operationsDesignation.insert(TreeLL::functions::pushParam, "Push");
+
+
 
  //заполняем управляющую таблицу
     QList<Lexem*> Cell;  //одно правило таблицы
@@ -893,6 +897,7 @@ LLAnalizator::LLAnalizator()
         Rules.append(*new Rule (&Cell));
         Sting.insert(Tzap, Rules);      //добавляем список правил в ячейку строки
 
+        Cell.append(new Lexem (TreeLL::functions::pushParam, true));
         Cell.append(new Lexem (TreeLL::functions::matchParamType, true));
         Cell.append(new Lexem (NA1, true));
         Rules.clear();
@@ -916,6 +921,7 @@ LLAnalizator::LLAnalizator()
 
         Cell.clear();   //;
         Cell.append(new Lexem (ND, true));
+        Cell.append(new Lexem (TreeLL::functions::pushParam, true));
         Cell.append(new Lexem (TreeLL::functions::matchParamType, true));
         Cell.append(new Lexem (NA1, true));
         Cell.append(new Lexem (Tzap, false));
@@ -1107,13 +1113,13 @@ void LLAnalizator::toAnalize ()
                                 }
                             break;
                         }
-                    case TreeLL::functions::matchUn:{
-                        if (matchUn(TreeLL::functions::matchTil) == Node::semTypes::TypeUnKnown){
-                            isSemError = true;
-                            ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": несоответствие типов\n";
+                        case TreeLL::functions::matchUn:{
+                            if (matchUn(TreeLL::functions::matchTil) == Node::semTypes::TypeUnKnown){
+                                isSemError = true;
+                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": несоответствие типов\n";
+                            }
+                            break;
                         }
-                        break;
-                    }
 
 
                         case TreeLL::functions::matchNumOnly:{
@@ -1125,10 +1131,11 @@ void LLAnalizator::toAnalize ()
                         }
 
                         case TreeLL::functions::matchLeft:{
-//                            if (match() == Node::semTypes::TypeUnKnown){
-//                                isSemError = true;
-//                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": несоответствие типов\n";
-//                            }
+                            //будем присваивать. Ид у нас уже занесен как операнд
+                            if (matchLeft(TreeLL::functions::matchLeft) == Node::semTypes::TypeUnKnown){
+                                isSemError = true;
+                                ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": неверный тип " + QString::number(lastType1) + " " + QString::number(lastType2) +"\n";
+                            }
                             break;
                         }
                         case TreeLL::functions::startParam:{
@@ -1153,6 +1160,10 @@ void LLAnalizator::toAnalize ()
                             }
                             break;
                         }
+                        case TreeLL::functions::pushParam:{
+
+                            break;
+                        }
                         case TreeLL::functions::matchParamType:{
                             paramCount++;
                             TreeLL *curPar = T->FindRightLeftNum(findedFunc, paramCount); //ищем очередной параметр этой функции
@@ -1160,10 +1171,45 @@ void LLAnalizator::toAnalize ()
                                 isSemError = true;
                                 ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": несоответствие числа параметров\n";
                                 break;
-                            }
-                            //types.push(curPar->N->TypeObj); //кладем типы формального и фактического параметров в стек
+                            } else{
+                                Operand *op1 = new Operand(curPar->N); //формальный параметр
+                                Operand *op2 = operands.pop();  //фактический параметр
 
-//                            types.push(T->semType(&(*lex)[cur - 1]));
+
+                                int t1, t2;
+
+                                if (op1->isLink){
+                                    t1 = triads[op1->number]->getType(); //получаем тип из той триады, которая указана в номере в операнде
+                                } else {
+                                    t1 = op1->getType();
+                                }
+                                if (op2->isLink){
+                                    t2 = triads[op2->number]->getType(); //получаем тип из той триады, которая указана в номере в операнде
+                                } else {
+                                    t2 = op2->getType();
+                                }
+
+
+                                //определяем тип фактического параметра
+                                int t = T->semTypeRes(t1, t2);
+
+                                if (t == Node::semTypes::TypeUnKnown){
+                                    isSemError = true;
+                                    ErrorSem = ErrorSem + QString::number((*lex)[cur].str) +":" + QString::number((*lex)[cur].pos) + ": неверный тип параметра\n";
+                                } else {
+
+                                    Triad *tr = new Triad(TreeLL::functions::pushParam, op2, nullptr);  //формируем триаду
+                                    tr->setType(t);  //определяем тип
+
+                                    op1 = new Operand(triads.count() - 1);
+                                    paramStack.push(op1);
+                                    operands.push(op1); //новый операнд - триада
+
+                                    triads.push_back(tr);
+
+                                }
+                            }
+
                             //проверяем соответствие
 //                            if (match() == Node::semTypes::TypeUnKnown){
 //                                isSemError = true;
@@ -1266,19 +1312,23 @@ void LLAnalizator::toAnalize ()
         int i = 1;
         //выводим все триады
         foreach (Triad* t, triads) {
-            QString txt1, txt2;
+            QString txt1 = "", txt2 = "";
             Operand *op1 = t->operand1;
-            if (op1->isLink){
-                txt1 = QString ("(") + QString::number(op1->number) + QString (")");
-            } else {
-                txt1 = op1->node->Id;
+            if (op1 != nullptr){
+                if (op1->isLink){
+                    txt1 = QString ("(") + QString::number(op1->number + 1) + QString (")");
+                } else {
+                    txt1 = op1->node->Id;
+                }
             }
 
             Operand *op2 = t->operand2;
-            if (op2->isLink){
-                txt2 = QString ("(") + QString::number(op2->number + 1) + QString (")");
-            } else {
-                txt2 = op2->node->Id;
+            if (op2 != nullptr){
+                if (op2->isLink){
+                    txt2 = QString ("(") + QString::number(op2->number + 1) + QString (")");
+                } else {
+                    txt2 = op2->node->Id;
+                }
             }
 
 
@@ -1324,7 +1374,14 @@ void LLAnalizator::startDecl()
 
 bool LLAnalizator::setIdent()
 {
-    return T->idToTable(new Node ((*lex)[cur - 1].image, type1));   //проверяем на дублирование и заносим с определенным ранее семантическим типом
+    bool isSetted = T->idToTable(new Node ((*lex)[cur - 1].image, type1));   //проверяем на дублирование и заносим с определенным ранее семантическим типом
+    if (isSetted){
+//        int type = T->semType(type1);    //определяем тип
+        QString im = (*lex)[cur - 1].image;
+        operands.push(new Operand (new Node(im, type1)));    //заносим как новый операнд!
+    }
+
+    return isSetted;
 }
 
 bool LLAnalizator::setParam()
@@ -1445,6 +1502,37 @@ int LLAnalizator::matchNumOnly(int operation)
     return t->getType();    //возвращаем тип результата
 }
 
+int LLAnalizator::matchLeft(int operation)
+{
+    //берем верхние типы
+    int t1, t2;
+
+    Operand *op2 = operands.pop();
+    if (op2->isLink){
+        t2 = triads[op2->number]->getType(); //получаем тип из той триады, которая указана в номере в операнде
+    } else {
+        t2 = op2->getType();
+    }
+
+    Operand *op1 = operands.pop();
+    if (op1->isLink){
+        t1 = triads[op1->number]->getType(); //получаем тип из той триады, которая указана в номере в операнде
+    } else {
+        t1 = op1->getType();
+    }
+
+    lastType1 = t1;
+    lastType2 = t2;
+
+    Triad *t = new Triad(operation, op1, op2);  //формируем триаду
+    t->setType(T->semTypeRes(t1, t2));  //определяем тип
+    triads.push_back(t);
+
+    //operands.push(new Operand(triads.count() - 1)); //новый операнд - триада
+
+    return t->getType();    //возвращаем тип результата
+}
+
 int LLAnalizator::matchUn(int operation)
 {
     //берем верхний тип
@@ -1457,7 +1545,7 @@ int LLAnalizator::matchUn(int operation)
         t = op->getType();
     }
 
-    Triad *tr = new Triad(operation, op, op);  //формируем триаду
+    Triad *tr = new Triad(operation, op, nullptr);  //формируем триаду
     tr->setType(T->semTypeResUn(t));  //определяем тип
     triads.push_back(tr);
 

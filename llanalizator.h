@@ -69,8 +69,14 @@ public:
     bool isDecl = false;
     int type1;
     int type2;
+
+    int lastType1;
+    int lastType2;
     //QStack <int> types; //стек типов
     QStack <Operand*> operands;  //стек операндов
+
+    QStack <Operand*> paramStack;  //стек параметров
+    QStack <Operand*> callStack;  //стек вызовов
 
 
     Scanner *scaner;
@@ -150,6 +156,13 @@ private:
      * @return приведенный тип
      */
     int matchNumOnly (int operation);
+
+    /**
+     * @brief
+     * @return приведенный тип
+     */
+    int matchLeft (int operation);
+
     /**
      * @brief
      * @return приведенный тип

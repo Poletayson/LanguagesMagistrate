@@ -44,7 +44,7 @@ class TreeLL
 {
 public:
     enum functions {startDecl = 201, setIdent, endDecl, setFunct, setNewLevel, returnLevel, endFunct, match, matchNumOnly, matchUn, find, findFunc, constType, push_t, startParam, setParam, stopParam, matchParamCount, matchParamType,
-                   matchPlus, matchMinus, matchMul, matchDiv, matchMod, matchOr, matchAnd, matchLSd, matchRSd, matchTil, matchLeft};   //семантические функции
+                   matchPlus, matchMinus, matchMul, matchDiv, matchMod, matchOr, matchAnd, matchLSd, matchRSd, matchTil, matchLeft, pushParam};   //семантические функции
 
     Node *N;
     TreeLL *Parent, *Left, *Right;
@@ -66,6 +66,7 @@ public:
     TreeLL *FindRightLeft (Node* n);   //поиск среди прямых потомков. Может вернуть null если нету
     TreeLL *FindRightLeftNum (TreeLL *From, int num);   //поиск среди прямых потомков узла с номером num. Может вернуть null если нету
     int semType (Lexem *lex);   //определение семантического типа
+    int semType (int type);   //определение семантического типа
     bool idToTable (Node *n);  //проверка на дублирование, занесение идентификатора вместе с семантическим типом в таблицу
     bool semFToTable (QString name); //занесение имени функции вместе с типом возвращаемого значения в таблицу, создание пустой правой вершины. Возвращает указатель на созданную
     void semSetParAmount (TreeLL* f, int n);    //установить число параметров

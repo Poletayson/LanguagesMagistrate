@@ -21,6 +21,11 @@ void Triad::setOperation(int value)
     operation = value;
 }
 
+QString Triad::toString()
+{
+    QString result = "";
+}
+
 Triad::Triad()
 {
     

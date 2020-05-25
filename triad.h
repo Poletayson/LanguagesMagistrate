@@ -32,6 +32,8 @@ public:
     void setType(int value);
     int getOperation() const;
     void setOperation(int value);
+
+    QString toString ();
 };
 
 #endif // TRIAD_H
