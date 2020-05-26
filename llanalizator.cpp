@@ -94,6 +94,12 @@ LLAnalizator::LLAnalizator()
     operationsDesignation.insert(TreeLL::functions::ret, "ret");
     operationsDesignation.insert(TreeLL::functions::endp, "endp");
 
+    operationsDesignation.insert(TreeLL::functions::cycleLabel, "cycleLabel");
+    operationsDesignation.insert(TreeLL::functions::gotoNop, "gotoNop");
+    operationsDesignation.insert(TreeLL::functions::o2ToPtr, "o2ToPtr");
+    operationsDesignation.insert(TreeLL::functions::o2Transfer, "o2Transfer");
+    operationsDesignation.insert(TreeLL::functions::loop, "loop");
+    operationsDesignation.insert(TreeLL::functions::nop, "nop");
 
 
 
@@ -473,12 +479,16 @@ LLAnalizator::LLAnalizator()
 
         Cell.clear();   //int
         Cell.append(new Lexem (TreeLL::functions::returnLevel, true));
+        Cell.append(new Lexem (TreeLL::functions::nop, true));  //сюда переходим по нулю. При этом надо будет занести номер триады в gotoNop
+        Cell.append(new Lexem (TreeLL::functions::loop, true)); //вернуться к cycleLabel
         Cell.append(new Lexem (NOperator, true));
         Cell.append(new Lexem (Trs, false));
+        Cell.append(new Lexem (TreeLL::functions::o2Transfer, true));  //переход по нулю
         Cell.append(new Lexem (NEndIter, true));
         Cell.append(new Lexem (Tdt, false));
+        Cell.append(new Lexem (TreeLL::functions::gotoNop, true));  //переход по нулю на nop. Изначально не знаем, сохраняем в goToNopIndexes
         Cell.append(new Lexem (NA1, true));
-        //Cell.append(new Lexem (Tdt, false));
+        Cell.append(new Lexem (TreeLL::functions::cycleLabel, true));     //метка цикла, на которую возвращаемся. Запоминаем ее в loopIndexes
         Cell.append(new Lexem (NInitCycle, true));
         Cell.append(new Lexem (TreeLL::functions::setNewLevel, true));
         Cell.append(new Lexem (Tls, false));
@@ -1012,6 +1022,56 @@ void LLAnalizator::toAnalize ()
                             returnLevel();
                             break;
                         }
+
+                    case TreeLL::functions::cycleLabel:{
+
+                        Triad *tr = new Triad(TreeLL::functions::cycleLabel, nullptr, nullptr);  //формируем триаду
+                        triads.push_back(tr);
+                        loopIndexes.push_back(triads.count() - 1);  //запоминаем номер. Его потом запишем для прыжка
+                        break;
+                    }
+                    case TreeLL::functions::gotoNop:{
+                        Operand *op = operands.pop();
+
+                        Triad *tr = new Triad(TreeLL::functions::gotoNop, op, nullptr);  //формируем триаду: прыжок при равенстве op нулю на nop, адрес которого мы пока не знаем
+                        triads.push_back(tr);
+                        goToNopIndexes.push_back(triads.count() - 1);  //запоминаем номер. Сюда потом запишем метку куда прыгать
+                        break;
+                    }
+                    case TreeLL::functions::o2Transfer:{
+
+                        QList<Triad*> transList;    //список, который переместим в конец
+                        //все триады до прыжка переносим во временный массив
+                        while (triads[triads.count() - 1]->getOperation() != TreeLL::functions::gotoNop) {
+                            transList.push_back(triads.takeLast());
+
+                        }
+                        transferEndIter.push_back(transList);   //помещаем в список списков (для учета вложенности)
+                        break;
+                    }
+                    case TreeLL::functions::loop:{
+                        //первым делом делаем перенос конца итерации
+                        QList<Triad*> transList = transferEndIter.takeLast();
+
+                        while (transList.count() > 0) {
+                            triads.push_back(transList.takeLast());
+                        }
+
+
+                        Triad *tr = new Triad(TreeLL::functions::loop, new Operand (loopIndexes.takeLast()), nullptr);  //формируем триаду
+                        triads.push_back(tr);
+
+                        break;
+                    }
+                    case TreeLL::functions::nop:{
+                        Triad *tr = new Triad(TreeLL::functions::nop, nullptr, nullptr);  //формируем триаду
+                        triads.push_back(tr);
+
+                        triads[goToNopIndexes.takeLast()]->operand1 = new Operand (triads.count() - 1); //а теперь в триаду прыжка заносим куда прыгать
+
+                        break;
+                    }
+
                         case TreeLL::functions::setFunct:{
                             if (!setFunct())    //дублирование функции
                             {

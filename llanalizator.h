@@ -78,6 +78,10 @@ public:
     QStack <Operand*> paramStack;  //стек параметров
     QStack <Operand*> callStack;  //стек вызовов
 
+    QList <QList<Triad*>> transferEndIter;  //переносимые концы итераций. Учитываем вложенность
+    QList <int> loopIndexes;    //индексы для перехода к проверке условия
+    QList <int> goToNopIndexes;    //индексы триад для выхода из цикла к nop. Изначально не знаем на какую триаду прыгать, поэтому запоминаем здесь триады прыжков
+
 
     Scanner *scaner;
     QList <Lexem> *lex;
