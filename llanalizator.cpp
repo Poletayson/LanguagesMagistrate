@@ -141,6 +141,9 @@ LLAnalizator::LLAnalizator()
     Sting.insert(Tvoid, Rules);      //добавляем список правил в ячейку строки
 
     Cell.append(new Lexem (NS, true));
+    Cell.append(new Lexem (TreeLL::functions::endp, true));
+    Cell.append(new Lexem (TreeLL::functions::ret, true));
+    Cell.append(new Lexem (TreeLL::functions::epilog, true));
     Cell.append(new Lexem (TreeLL::functions::endFunct, true));
     Cell.append(new Lexem (TreeLL::functions::returnLevel, true));
 //    Cell.append(new Lexem (TreeLL::functions::returnLevel, true));
@@ -152,6 +155,9 @@ LLAnalizator::LLAnalizator()
     Cell.append(new Lexem (NSpPar, true));
 //    Cell.append(new Lexem (TreeLL::functions::setNewLevel, true));
     Cell.append(new Lexem (Tls, false));
+    Cell.append(new Lexem (TreeLL::functions::prolog, true));
+    Cell.append(new Lexem (TreeLL::functions::proc, true));
+    Cell.append(new Lexem (TreeLL::functions::setFunct, true));
     Cell.append(new Lexem (Tmain, false));
     Cell.append(new Lexem (Tvoid, false));
     Rules.append(*new Rule (&Cell));    //добавляем правило
