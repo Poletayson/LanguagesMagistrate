@@ -101,6 +101,13 @@ LLAnalizator::LLAnalizator()
     operationsDesignation.insert(TreeLL::functions::loop, "loop");
     operationsDesignation.insert(TreeLL::functions::nop, "nop");
 
+    operationsDesignation.insert(TreeLL::functions::CharToInt, "CharToInt");
+    operationsDesignation.insert(TreeLL::functions::LongToInt, "LongToInt");
+    operationsDesignation.insert(TreeLL::functions::IntToChar, "IntToChar");
+    operationsDesignation.insert(TreeLL::functions::IntToLong, "IntToLong");
+    operationsDesignation.insert(TreeLL::functions::CharToLong, "CharToLong");
+    operationsDesignation.insert(TreeLL::functions::LongToChar, "LongToChar");
+
 
 
  //заполняем управляющую таблицу
@@ -1036,6 +1043,9 @@ void LLAnalizator::toAnalize ()
                         Triad *tr = new Triad(TreeLL::functions::gotoNop, op, nullptr);  //формируем триаду: прыжок при равенстве op нулю на nop, адрес которого мы пока не знаем
                         triads.push_back(tr);
                         goToNopIndexes.push_back(triads.count() - 1);  //запоминаем номер. Сюда потом запишем метку куда прыгать
+
+                        triadCountStart.push_back(triads.count());  //запоминаем число триад, чтобы потом скорректировать где надо
+
                         break;
                     }
                     case TreeLL::functions::o2Transfer:{
@@ -1052,9 +1062,17 @@ void LLAnalizator::toAnalize ()
                     case TreeLL::functions::loop:{
                         //первым делом делаем перенос конца итерации
                         QList<Triad*> transList = transferEndIter.takeLast();
+                        int iterOffset = triads.count() - triadCountStart.takeLast();   //смещение
 
                         while (transList.count() > 0) {
-                            triads.push_back(transList.takeLast());
+                            Triad* ptrTriad = transList.takeLast();
+                            if (ptrTriad->operand1 != nullptr)
+                                if (ptrTriad->operand1->isLink)
+                                    ptrTriad->operand1->number += iterOffset;
+                            if (ptrTriad->operand2 != nullptr)
+                                if (ptrTriad->operand2->isLink)
+                                    ptrTriad->operand2->number += iterOffset;
+                            triads.push_back(ptrTriad);
                         }
 
 
@@ -1067,7 +1085,7 @@ void LLAnalizator::toAnalize ()
                         Triad *tr = new Triad(TreeLL::functions::nop, nullptr, nullptr);  //формируем триаду
                         triads.push_back(tr);
 
-                        triads[goToNopIndexes.takeLast()]->operand1 = new Operand (triads.count() - 1); //а теперь в триаду прыжка заносим куда прыгать
+                        triads[goToNopIndexes.takeLast()]->operand2 = new Operand (triads.count() - 1); //а теперь в триаду прыжка заносим куда прыгать
 
                         break;
                     }
@@ -1572,6 +1590,30 @@ int LLAnalizator::match(int operation)
         t1 = op1->getType();
     }
 
+    if (t1 != t2){
+        int function = 0;
+        //будем приводить op2
+        if (t1 == Node::semTypes::TypeInt && t2 == Node::semTypes::TypeLong)
+            function = TreeLL::functions::LongToInt;
+        if (t1 == Node::semTypes::TypeInt && t2 == Node::semTypes::TypeChar)
+            function = TreeLL::functions::CharToInt;
+        if (t1 == Node::semTypes::TypeChar && t2 == Node::semTypes::TypeLong)
+            function = TreeLL::functions::LongToChar;
+        if (t1 == Node::semTypes::TypeChar && t2 == Node::semTypes::TypeInt)
+            function = TreeLL::functions::IntToChar;
+        if (t1 == Node::semTypes::TypeLong && t2 == Node::semTypes::TypeInt)
+            function = TreeLL::functions::IntToLong;
+        if (t1 == Node::semTypes::TypeLong && t2 == Node::semTypes::TypeChar)
+            function = TreeLL::functions::CharToLong;
+        Triad *t = new Triad(function, op2, nullptr);  //формируем триаду
+//        t->setType(T->semTypeRes(t1, t2));  //определяем тип
+        triads.push_back(t);
+
+        op2 = new Operand (triads.count() - 1); //теперь у нас другой операнд - триада!
+    }
+
+
+
     Triad *t = new Triad(operation, op1, op2);  //формируем триаду
     t->setType(T->semTypeRes(t1, t2));  //определяем тип
     triads.push_back(t);
@@ -1601,6 +1643,29 @@ int LLAnalizator::matchNumOnly(int operation)
         t1 = op1->getType();
     }
 
+    if (t1 != t2){
+        int function = 0;
+        //будем приводить op2
+        if (t1 == Node::semTypes::TypeInt && t2 == Node::semTypes::TypeLong)
+            function = TreeLL::functions::LongToInt;
+        if (t1 == Node::semTypes::TypeInt && t2 == Node::semTypes::TypeChar)
+            function = TreeLL::functions::CharToInt;
+        if (t1 == Node::semTypes::TypeChar && t2 == Node::semTypes::TypeLong)
+            function = TreeLL::functions::LongToChar;
+        if (t1 == Node::semTypes::TypeChar && t2 == Node::semTypes::TypeInt)
+            function = TreeLL::functions::IntToChar;
+        if (t1 == Node::semTypes::TypeLong && t2 == Node::semTypes::TypeInt)
+            function = TreeLL::functions::IntToLong;
+        if (t1 == Node::semTypes::TypeLong && t2 == Node::semTypes::TypeChar)
+            function = TreeLL::functions::CharToLong;
+        Triad *t = new Triad(function, op2, nullptr);  //формируем триаду
+//        t->setType(T->semTypeRes(t1, t2));  //определяем тип
+        triads.push_back(t);
+
+        op2 = new Operand (triads.count() - 1); //теперь у нас другой операнд - триада!
+    }
+
+
     Triad *t = new Triad(operation, op1, op2);  //формируем триаду
     t->setType(T->semTypeResOnlyNum(t1, t2));  //определяем тип
     triads.push_back(t);
@@ -1627,6 +1692,29 @@ int LLAnalizator::matchLeft(int operation)
         t1 = triads[op1->number]->getType(); //получаем тип из той триады, которая указана в номере в операнде
     } else {
         t1 = op1->getType();
+    }
+
+    if (t1 != t2){
+        int function = 0;
+        //будем приводить op2
+        if (t1 == Node::semTypes::TypeInt && t2 == Node::semTypes::TypeLong)
+            function = TreeLL::functions::LongToInt;
+        if (t1 == Node::semTypes::TypeInt && t2 == Node::semTypes::TypeChar)
+            function = TreeLL::functions::CharToInt;
+        if (t1 == Node::semTypes::TypeChar && t2 == Node::semTypes::TypeLong)
+            function = TreeLL::functions::LongToChar;
+        if (t1 == Node::semTypes::TypeChar && t2 == Node::semTypes::TypeInt)
+            function = TreeLL::functions::IntToChar;
+        if (t1 == Node::semTypes::TypeLong && t2 == Node::semTypes::TypeInt)
+            function = TreeLL::functions::IntToLong;
+        if (t1 == Node::semTypes::TypeLong && t2 == Node::semTypes::TypeChar)
+            function = TreeLL::functions::CharToLong;
+        Triad *t = new Triad(function, op2, nullptr);  //формируем триаду
+//        t->setType(T->semTypeRes(t1, t2));  //определяем тип
+        triads.push_back(t);
+
+        op2 = new Operand (triads.count() - 1); //теперь у нас другой операнд - триада!
+        t2 = t1;
     }
 
     lastType1 = t1;

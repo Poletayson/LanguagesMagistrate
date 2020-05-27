@@ -81,6 +81,7 @@ public:
     QList <QList<Triad*>> transferEndIter;  //переносимые концы итераций. Учитываем вложенность
     QList <int> loopIndexes;    //индексы для перехода к проверке условия
     QList <int> goToNopIndexes;    //индексы триад для выхода из цикла к nop. Изначально не знаем на какую триаду прыгать, поэтому запоминаем здесь триады прыжков
+    QList <int> triadCountStart;    //число триад ДО конца итерации
 
 
     Scanner *scaner;
@@ -146,15 +147,6 @@ private:
      */
     int match (int operation);
 
-    int matchPlus ();
-    int matchMinus ();
-    int matchMul ();
-    int matchDiv ();
-    int matchMod ();
-    int matchOr ();
-    int matchAnd ();
-    int matchLSd ();
-    int matchRSd ();
     /**
      * @brief
      * @return приведенный тип

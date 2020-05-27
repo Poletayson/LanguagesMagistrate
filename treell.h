@@ -45,6 +45,7 @@ class TreeLL
 public:
     enum functions {startDecl = 201, setIdent, endDecl, setFunct, setNewLevel, returnLevel, endFunct, match, matchNumOnly, matchUn, find, findFunc, constType, push_t, startParam, setParam, stopParam, matchParamCount, matchParamType,
                    matchPlus, matchMinus, matchMul, matchDiv, matchMod, matchOr, matchAnd, matchLSd, matchRSd, matchTil, matchLeft, pushParam, call,
+                   CharToInt, LongToInt, IntToChar, IntToLong, CharToLong, LongToChar,
                    proc, prolog, epilog, ret, endp, 
                    cycleLabel, gotoNop, o2ToPtr, o2Transfer, loop, nop};   //семантические функции
 
