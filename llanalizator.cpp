@@ -1067,7 +1067,7 @@ void LLAnalizator::toAnalize ()
                         Triad *tr = new Triad(TreeLL::functions::nop, nullptr, nullptr);  //формируем триаду
                         triads.push_back(tr);
 
-                        triads[goToNopIndexes.takeLast()]->operand1 = new Operand (triads.count() - 1); //а теперь в триаду прыжка заносим куда прыгать
+                        triads[goToNopIndexes.takeLast()]->operand2 = new Operand (triads.count() - 1); //а теперь в триаду прыжка заносим куда прыгать
 
                         break;
                     }
