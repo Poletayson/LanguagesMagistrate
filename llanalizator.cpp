@@ -8,6 +8,8 @@ LLAnalizator::LLAnalizator()
     cur = 0;
     right = true;
 
+    nodeCount = 0;
+
 #define Tplus 44
 #define Tminus 45
 #define Tdel 46
@@ -121,7 +123,7 @@ LLAnalizator::LLAnalizator()
     Cell.append(new Lexem (TreeLL::functions::epilog, true));
     Cell.append(new Lexem (TreeLL::functions::endFunct, true));
     Cell.append(new Lexem (TreeLL::functions::returnLevel, true));
-//    Cell.append(new Lexem (TreeLL::functions::returnLevel, true));
+    Cell.append(new Lexem (TreeLL::functions::returnLevel, true));
     Cell.append(new Lexem (Trf, false));
     Cell.append(new Lexem (NBlock, true));
     Cell.append(new Lexem (TreeLL::functions::setNewLevel, true));
@@ -130,7 +132,6 @@ LLAnalizator::LLAnalizator()
     Cell.append(new Lexem (TreeLL::functions::stopParam, true));
     Cell.append(new Lexem (NSpPar, true));
     Cell.append(new Lexem (TreeLL::functions::startParam, true));
-//    Cell.append(new Lexem (TreeLL::functions::setNewLevel, true));
     Cell.append(new Lexem (Tls, false));
     Cell.append(new Lexem (TreeLL::functions::prolog, true));
     Cell.append(new Lexem (TreeLL::functions::proc, true));
@@ -146,7 +147,7 @@ LLAnalizator::LLAnalizator()
     Cell.append(new Lexem (TreeLL::functions::epilog, true));
     Cell.append(new Lexem (TreeLL::functions::endFunct, true));
     Cell.append(new Lexem (TreeLL::functions::returnLevel, true));
-//    Cell.append(new Lexem (TreeLL::functions::returnLevel, true));
+    Cell.append(new Lexem (TreeLL::functions::returnLevel, true));
     Cell.append(new Lexem (Trf, false));
     Cell.append(new Lexem (NBlock, true));
     Cell.append(new Lexem (TreeLL::functions::setNewLevel, true));
@@ -1270,6 +1271,8 @@ void LLAnalizator::toAnalize ()
                             Triad *tr = new Triad(TreeLL::functions::proc, new Operand (findedFunc->N), nullptr);  //формируем триаду
                             tr->setType(TreeLL::functions::proc);  //определяем тип
                             triads.push_back(tr);
+
+                            stackOffsetCurrent = 0; //смещение начинаем считать с нуля
                             break;
                         }
                         case TreeLL::functions::prolog:{
@@ -1467,6 +1470,9 @@ void LLAnalizator::toAnalize ()
            outStream<<QString::number(i)<< ") " << operationsDesignation.value(t->getOperation()) << QString("  ") << txt1 << QString("  ") << txt2 << QString("\n");
            i++;
         }
+
+        Translator *translator = new Translator(triads, T);
+        translator->translate();    //транслируем!
     }
     else
     {   if (isError)
@@ -1479,6 +1485,38 @@ void LLAnalizator::toAnalize ()
 
 
    return;
+}
+
+void LLAnalizator::translate()
+{
+//    asmCode = "section .data\n";    //
+//    TreeLL *root = T->getRoot();
+//    while (root != nullptr){
+//        switch (root->N->TypeObj){
+//            case Node::semTypes::TypeInt:{
+//                asmCode += " " + root->N->Id_asm + " DQ " + "\n";    //
+//                break;
+//            }
+//            case Node::semTypes::TypeChar:{
+//                asmCode += " " + root->N->Id_asm + " DQ " + "\n";    //
+//                break;
+//            }
+//            case Node::semTypes::TypeLong:{
+//                asmCode += " " + root->N->Id_asm + " DD " + "\n";    //
+//                break;
+//            }
+//        }
+//        root = root->Left;
+//    }
+
+//    asmCode += "\nsection .text\n";    //
+
+
+//    QFile file ("out.txt");
+//    file.open(QIODevice::WriteOnly);
+//    QTextStream ts (&file);
+//    ts << asmCode;
+//    file.close();
 }
 
 void LLAnalizator::startDecl()
@@ -1506,11 +1544,20 @@ void LLAnalizator::startDecl()
 
 bool LLAnalizator::setIdent()
 {
-    bool isSetted = T->idToTable(new Node ((*lex)[cur - 1].image, type1));   //проверяем на дублирование и заносим с определенным ранее семантическим типом
+    QString im = (*lex)[cur - 1].image;
+    Node *newNode = new Node(im, type1);
+
+    if (type1 == Node::semTypes::TypeLong)
+        stackOffsetCurrent += 8;
+    else
+        stackOffsetCurrent += 4;
+
+    newNode->Id_asm = im + QString::number(nodeCount++);    //имя в asm
+    newNode->stackOffset = stackOffsetCurrent;    //смещение от вершины стека
+
+    bool isSetted = T->idToTable(newNode);   //проверяем на дублирование и заносим с определенным ранее семантическим типом
     if (isSetted){
-//        int type = T->semType(type1);    //определяем тип
-        QString im = (*lex)[cur - 1].image;
-        operands.push(new Operand (new Node(im, type1)));    //заносим как новый операнд!
+        operands.push(new Operand (newNode));    //заносим как новый операнд!
     }
 
     return isSetted;

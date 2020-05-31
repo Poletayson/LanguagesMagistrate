@@ -41,6 +41,7 @@
 #include <qdebug.h>
 #include "QList"
 #include "scanner.h"
+#include "translator.h"
 #include <rule.h>
 
 #include "locale.h"
@@ -56,6 +57,7 @@ public:
     QMultiMap <int, QString> operationsDesignation; //обозначение операций
     LLAnalizator();
     void toAnalize ();
+    void translate();
 
 
     bool isError;
@@ -90,12 +92,18 @@ public:
     TreeLL *T;
     QString ErrorText;
     QString ErrorSem;
+
 private:
+    int nodeCount;   //счетчик узлов
+    int stackOffsetCurrent;     //смещение от EBP внутри теущей фунции
+
     int paramCount; //счетчик параметров функции
     TreeLL *findedFunc;
 
     QList <Triad*> triads;  //список сгенерированных триад
     Operand *result;   // очередной результат
+
+    QString asmCode;
 
     /**
      * @brief установить флаг описания данных и запомнить тип в глобальной  переменной dataType

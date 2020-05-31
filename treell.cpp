@@ -39,6 +39,15 @@ void TreeLL::addRight (Node *n)
     Right = a;
     //Cur = Right;
 }
+
+TreeLL *TreeLL::getRoot()
+{
+    TreeLL *cur = this->Cur;
+    while (cur->Parent != nullptr) {
+        cur = cur->Parent;
+    }
+    return cur;
+}
  TreeLL *TreeLL::Find (TreeLL *From, Node* n)     //ищем во всем дереве вверх
 {
     TreeLL *cur = From;

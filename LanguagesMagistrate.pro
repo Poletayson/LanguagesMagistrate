@@ -29,6 +29,7 @@ SOURCES += \
     lexem.cpp \
     analizator.cpp \
     node.cpp \
+    translator.cpp \
     tree.cpp \
     treell.cpp \
     llanalizator.cpp \
@@ -47,6 +48,7 @@ HEADERS += \
     lexem.h \
     analizator.h \
     node.h \
+    translator.h \
     tree.h \
     treell.h \
     llanalizator.h \

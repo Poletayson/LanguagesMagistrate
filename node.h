@@ -18,8 +18,11 @@ class Node
 public:
     enum semTypes {TypeVoid = 0, TypeMain, TypeFunc, TypeInt, TypeLong, TypeChar, TypeUnKnown = -1, TypeEmpty = 10};
     QString Id;         //изображение объекта
+    QString Id_asm;         //изображение объекта в ассемблере
     int TypeObj;          //тип
     int ParamCount;     //число параметров функции
+
+    int stackOffset;     //смещение от EBP
     Node(QString I, int T, int c = 0);
 //    static int getSemType (int type);
 };

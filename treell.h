@@ -59,6 +59,7 @@ public:
     TreeLL(TreeLL *p, TreeLL *l, TreeLL *r, Node *n);
     void addLeft (Node *n);             //вставить потомка
     void addRight (Node *n);
+    TreeLL *getRoot ();   //Получить корень дерева
     TreeLL *Find (TreeLL *From, Node* n);   //поиск в таблице. Может вернуть null если нету
     TreeLL *Find (QString name);   //поиск в таблице. Может вернуть null если нету
     TreeLL *Find (Node* n);   //поиск в таблице. Может вернуть null если нету
