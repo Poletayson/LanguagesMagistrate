@@ -1549,8 +1549,10 @@ bool LLAnalizator::setIdent()
 
     if (type1 == Node::semTypes::TypeLong)
         stackOffsetCurrent += 8;
-    else
+    else if (type1 == Node::semTypes::TypeInt)
         stackOffsetCurrent += 4;
+    else
+        stackOffsetCurrent += 1;
 
     newNode->Id_asm = im + QString::number(nodeCount++);    //имя в asm
     newNode->stackOffset = stackOffsetCurrent;    //смещение от вершины стека

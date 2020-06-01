@@ -46,7 +46,7 @@ Translator::Translator(QList<Triad *> triads, TreeLL *T)
 
 void Translator::translate()
 {
-    asmCode = "section .data\n";    //
+    asmCode = "%include \"io.inc\"\n\nsection .data\n";    //
     TreeLL *root = T->getRoot();
 
     while (root != nullptr){
@@ -82,7 +82,10 @@ void Translator::translate()
         root = root->Left;
     }
 
-    asmCode += "\nglobal _start\n\n_start:\n";    //секция с кодом
+    asmCode += "\nsection .text\n"
+               "global CMAIN\n"
+               "CMAIN:\n"
+               " mov ebp, esp ;for correct debugging\n";    //секция с кодом
 
 
     int curTriad = 0;
@@ -130,8 +133,6 @@ void Translator::translate()
                 //если первый операнд уже есть в регистре
                 if(triads[curTriad]->operand1->isLink){
                     int tr = triads[curTriad]->operand1->number;
-//                    if (triads[tr]->operation == TreeLL::functions::CharToInt || triads[tr]->operation == TreeLL::functions::CharToLong || triads[tr]->operation == TreeLL::functions::IntToChar || triads[tr]->operation == TreeLL::functions::IntToLong || triads[tr]->operation == TreeLL::functions::LongToInt || triads[tr]->operation == TreeLL::functions::LongToChar)
-//                        tr--;
 
                     regNum1 = getTriadRegister(tr);
                     setRegister(regNum1, curTriad); //занимаем его
@@ -201,7 +202,7 @@ void Translator::translate()
                 }
 
 
-                asmCode += operation + operand1 + "," + operand2 + " ; + " + txt1 + " " + txt2 + "\n";    //
+                asmCode += operation + operand1 + "," + operand2 + " ;+ " + txt1 + " " + txt2 + "\n";    //
                 retRegister(regNum2);    //вернем второй регистр
                 break;
             }
@@ -338,7 +339,7 @@ void Translator::translate()
                         }
                     }
 
-                    asmCode += operation + operand1tmp + "," + operand2 + " ; = " + txt1 + " " + txt2 + "\n";    //
+                    asmCode += operation + operand1tmp + "," + operand2 + " ;= " + txt1 + " " + txt2 + "\n";    //
                     operand2 = operand1tmp;
 
                     retRegister(regNum);    //освобождаем регистр
@@ -353,6 +354,7 @@ void Translator::translate()
         }
         curTriad++;
     }
+    asmCode += "\n ret";
 
 
 
