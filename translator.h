@@ -3,6 +3,7 @@
 
 #include "treell.h"
 #include "triad.h"
+#include <QDebug>
 #include <QFile>
 #include <QTextStream>
 
@@ -21,6 +22,8 @@ public:
 private:
     bool registers[4] = {false, false, false, false};  //регистры, заняты или нет
     int registersValues[4] = {-1, -1, -1, -1};  //значения регистров - номера триад
+
+    QMultiMap <int, QString> operationsDesignation; //обозначение операций
     QMap<int, QString> registersNames;
 
     /**
@@ -35,6 +38,8 @@ private:
      * @return Номер регистра, -1 если не нашлось
      */
     int getRegister ();
+
+    void setRegister (int regNum, int triadNum);
     /**
      * @brief retRegister Вернуть регистр в пул
      * @param reg Номер освободившегося регистра

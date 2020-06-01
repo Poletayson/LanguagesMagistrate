@@ -1602,7 +1602,7 @@ TreeLL* LLAnalizator::findId()
     else {
         int type = id->N->TypeObj;    //определяем тип
         QString im = id->N->Id;
-        operands.push(new Operand (new Node(im, type)));    //заносим как новый операнд!
+        operands.push(new Operand (id->N));    //заносим как новый операнд!
     }
 
     return id;
